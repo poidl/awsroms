@@ -8,6 +8,10 @@ We assume that AWS has currently the biggest market share of the mainstream publ
 
 The long-term goal is to produce configuration tools which are portable between cloud providers, to avoid ”provider lock-in”. Clearly, it is desirable to have configuration software that works in combination with most public cloud providers and popular open-source software platforms for private clouds (OpenStack, etc.)
 
+### Issues, Questions
+
+* cfncluster seems to be using Chef, which is written in Ruby/Erlang. Scientists are probably more familiar with Python than Ruby/Erlang. Can we use Ansible instead, which is written in Python? This would increase trasparency, accessablility, etc.
+
 ### TODO
 
 everything minus an ambitious Readme file
