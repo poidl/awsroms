@@ -1,0 +1,6 @@
+#!/bin/bash
+yum -y install --enablerepo=epel netcdf
+
+# need to set 's3_read_write_resource' in cfncluster config
+aws s3 cp {{ roms_source_targz }} .
+tar -xf roms.tar.gz

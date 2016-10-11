@@ -1,0 +1,19 @@
+[global]
+cluster_template = default
+update_check = true
+sanity_check = true
+
+[aws]
+
+[cluster default]
+key_name = {{ key_name }}
+vpc_settings = public
+initial_queue_size = 2
+max_queue_size = 2
+maintain_initial_size = true
+s3_read_write_resource = {{ s3_read_write_resource }}
+
+[vpc public]
+vpc_id = {{ vpc_id }}
+master_subnet_id = {{ master_subnet_id }}
+
