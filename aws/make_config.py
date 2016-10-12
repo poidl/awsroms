@@ -1,42 +1,45 @@
+"""Use templates to populate config files and scripts with private data.
+    Don't version control private data."""
+
 import os
+import json
 import jinja2
 
-# Don't version control private data. 
-# Use templates to populate config files and scripts with private data.
-
-config_template = './config_template'
-post_install_template = './post_install_template'
+CONFIG_TEMPLATE = './config_template'
+POST_INSTALL_TEMPLATE = './post_install_template'
 
 # Directory containing files with private data
-private_dir='/home/stefan/Documents/aws'
+PRIVATE_DIR = '/home/stefan/Documents/aws'
 
 # context is a file containing a dictionary, e.g.
 # {
 #     'key_name': 'mykey1',
 # 	...
 # }
-context = private_dir+'/cluster_variables'
+VARS = PRIVATE_DIR+'/cluster_variables.json'
 
 # Output files. These will contain the private data!
-config_fname = private_dir+'/config'
-post_install_fname = private_dir+'/post_install.sh'
+CONFIG_FNAME = PRIVATE_DIR+'/config'
+POST_INSTALL_FNAME = PRIVATE_DIR+'/post_install.sh'
 
 
-# http://matthiaseisen.com/pp/patterns/p0198/
+# render() is copied from http://matthiaseisen.com/pp/patterns/p0198/
 def render(fname_tmpl, context):
-	path, f1 = os.path.split(fname_tmpl)
-	return jinja2.Environment(
+    """render fills a template file with values from a dict."""
+    path, basename = os.path.split(fname_tmpl)
+    return jinja2.Environment(
         loader=jinja2.FileSystemLoader(path or './')
-    ).get_template(f1).render(context)
+    ).get_template(basename).render(context)
 
 
-f = open(context, 'r')
-context = eval(f.read())
+FILE = open(VARS, 'r')
 
-tmp = render(config_template, context)
-f = open(config_fname, 'w')
-f.write(tmp)
+VARS_DICT = json.load(FILE)
 
-tmp = render(post_install_template, context)
-f = open(post_install_fname, 'w')
-f.write(tmp)
+TMP = render(CONFIG_TEMPLATE, VARS_DICT)
+FP = open(CONFIG_FNAME, 'w')
+FP.write(TMP)
+
+TMP = render(POST_INSTALL_TEMPLATE, VARS_DICT)
+FP = open(POST_INSTALL_FNAME, 'w')
+FP.write(TMP)
