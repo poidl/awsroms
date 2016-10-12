@@ -1,7 +1,4 @@
 #!/bin/bash
-yum -y install --enablerepo=epel netcdf
-
-#!/bin/bash
 sudo yum -y install --enablerepo=epel netcdf
 sudo yum -y install --enablerepo=epel netcdf-devel
 
