@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Create a single ec2 instance. Useful e.g. for testing a software stack on AWS 
+# Linux AMIs. Prior to usage, set the following environment variables:
+# export PROFILE = ...
+# export REGION = ...
+
+case "$1" in
+    list)
+        echo "::Listing stacks"
+        aws cloudformation describe-stacks \
+                --profile $PROFILE \
+                --region $REGION \
+                --query 'Stacks[].[StackName, StackStatus]' \
+                --output text
+        ;;
+    create)
+        echo "::Creating stack"
+        MYIP=$(wget http://ipinfo.io/ip -qO -)
+        HTTPLOCATION=$MYIP/32
+        aws cloudformation create-stack \
+            --profile $PROFILE \
+            --region $REGION \
+            --stack-name $2 \
+            --parameters '[
+                {
+                    "ParameterKey":"KeyName",
+                    "ParameterValue":{{ KeyName }}
+                },{
+                    "ParameterKey":"HTTPLocation",
+                    "ParameterValue":"'$HTTPLOCATION'"
+                },{
+                    "ParameterKey":"SSHLocation",
+                    "ParameterValue":"'$HTTPLOCATION'"
+                }
+            ]' \
+            --template-body {{ template_body }}
+        ;;
+    events)
+        echo "::Displaying stack events"
+        aws cloudformation describe-stack-events \
+            --profile $PROFILE \
+            --region $REGION \
+            --stack-name $2 \
+            --query 'StackEvents[].[ResourceType, ResourceStatus]' \
+            --output text
+        ;;
+    delete)
+        echo "::Deleting stack"
+        aws cloudformation delete-stack \
+            --profile $PROFILE \
+            --region $REGION \
+            --stack-name $2 \
+        ;;
+    *)
+        echo 'Usage: ec2_testing.sh list|create|events|delete'
+        exit 1
+esac
+
