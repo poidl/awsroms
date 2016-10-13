@@ -15,6 +15,11 @@ case "$1" in
         aws cloudformation describe-stacks \
                 --query 'Stacks[].[StackName, StackStatus]' \
                 --output text
+        echo ""
+        echo ":: Listing instance properties"
+        aws ec2 describe-instances \
+                --query 'Reservations[].Instances[].[State.Name,ImageId,InstanceType,PublicIpAddress]' \
+                --output text
         ;;
     create)
         echo "::Creating stack"
