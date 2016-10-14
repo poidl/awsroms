@@ -1,15 +1,4 @@
 #!/bin/bash
-sudo yum -y install --enablerepo=epel netcdf
-sudo yum -y install --enablerepo=epel netcdf-devel
-
-# on some (current?) AMIs, gcc48-gfortran is default, but the default netcdf-devel is compiled with a different version. Fix by using gcc44-gfortran
-
-BROKEN correctly configure alternatives on Linux AMIs. Currently compilation works, but runtime error: Floating point exception. Maybe due to old gfortran?
-
-sudo yum install gcc44-gfortran
-sudo rm /etc/alternatives/gfortran
-sudo ln -s  /usr/bin/gfortran44 /etc/alternatives/gfortran
-
-# need to set 's3_read_write_resource' in cfncluster config
-aws s3 cp {{ roms_source_targz }} .
+sudo yum -y install netcdf-fortran-devel
+wget https://s3-ap-southeast-1.amazonaws.com/romsaws/roms.tar.gz
 tar -xf roms.tar.gz
