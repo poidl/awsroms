@@ -36,7 +36,7 @@
                 "KeyName": {
                     "Ref": "KeyName"
                 },
-                "ImageId": "ami-7243e611",
+                "ImageId": "ami-d5f52eb6",
                 "InstanceType": "t2.micro"
             },
             

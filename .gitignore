@@ -5,7 +5,6 @@ oceanM
 oceanS
 oceanG
 oceanO
-*nc
-
-
+*.nc
 __pycache__
+*.pyc
