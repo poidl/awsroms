@@ -80,7 +80,7 @@ done
 # determine the name of the ".h" header file with the application
 # CPP definitions.
 
-export   ROMS_APPLICATION=UPWELLING
+export   ROMS_APPLICATION=BENCHMARK
 
 # Set a local environmental variable to define the path to the directories
 # where all this project's files are kept.
@@ -99,7 +99,7 @@ export     MY_PROJECT_DIR=${PWD}
 # to the code and inputs on differing machines.
 
 #export       MY_ROMS_SRC=${MY_ROOT_DIR}/branches/arango
-export       MY_ROMS_SRC=${PWD}/../roms
+export       MY_ROMS_SRC=${PWD}/../../roms
 
 # Set path of the directory containing makefile configuration (*.mk) files.
 # The user has the option to specify a customized version of these files
@@ -132,8 +132,8 @@ export       MY_ROMS_SRC=${PWD}/../roms
 # out. Any string value (including off) will evaluate to TRUE in
 # conditional if-statements.
 
-# export           USE_MPI=on            # distributed-memory parallelism
-# export        USE_MPIF90=on            # compile with mpif90 script
+export           USE_MPI=on            # distributed-memory parallelism
+export        USE_MPIF90=on            # compile with mpif90 script
 #export         which_MPI=mpich         # compile with MPICH library
 #export         which_MPI=mpich2        # compile with MPICH2 library
  export         which_MPI=openmpi       # compile with OpenMPI library
@@ -189,7 +189,7 @@ if [ -n "${USE_MPIF90:+1}" ]; then
       if [ "${which_MPI}" = "mpich2" ]; then
         export PATH=/opt/gfortransoft/mpich2/bin:$PATH
       elif [ "${which_MPI}" = "openmpi" ]; then
-        export PATH=/usr/lib/openmpi/bin:$PATH
+        export PATH=/usr/lib64/openmpi/bin:$PATH
       fi
       ;;
 
