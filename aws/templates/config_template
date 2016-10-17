@@ -12,6 +12,8 @@ initial_queue_size = 2
 max_queue_size = 2
 maintain_initial_size = true
 s3_read_write_resource = {{ s3_read_write_resource }}
+base_os = centos7
+post_install = https://s3-ap-southeast-1.amazonaws.com/romsaws/post_install.sh
 
 [vpc public]
 vpc_id = {{ vpc_id }}
