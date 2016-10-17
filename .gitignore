@@ -8,3 +8,4 @@ oceanO
 *.nc
 __pycache__
 *.pyc
+machinefile
