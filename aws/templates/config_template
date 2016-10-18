@@ -11,7 +11,9 @@ vpc_settings = public
 initial_queue_size = 2
 max_queue_size = 2
 maintain_initial_size = true
+# TODO: what is the difference between the following two (if the role gives full s3 access)
 s3_read_write_resource = {{ s3_read_write_resource }}
+# ec2_iam_role = {{ ec2_iam_role }}
 base_os = centos7
 post_install = https://s3-ap-southeast-1.amazonaws.com/romsaws/post_install.sh
 
