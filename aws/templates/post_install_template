@@ -25,12 +25,12 @@ function extract {
         case $? in
         0)
             su $MYUSER -c "tar -xf $BNAME"
-            exit 0
+            return 0
             ;;
         esac
     esac
     echo "unknown extension in \""$BNAME"\""
-    exit 1
+    return 1
 }
 
 # Download publickly accessible file and unpack

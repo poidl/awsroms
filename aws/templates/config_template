@@ -4,6 +4,7 @@ update_check = true
 sanity_check = true
 
 [aws]
+# Use shell environment variables for this section. Alternatively, define them here.
 
 [cluster default]
 key_name = {{ key_name }}
