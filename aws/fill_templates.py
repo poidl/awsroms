@@ -5,13 +5,21 @@ import os
 import json
 import jinja2
 
-# render() is copied from http://matthiaseisen.com/pp/patterns/p0198/
+def myfilter(value, operation):
+    """myfilter converts a variable to a different format"""
+    if operation == 's3arntouri':
+        return value.replace('arn:aws:s3:::', 's3://').replace('/*', '')
+    print("Unknown operation: "+operation)
+
+# jinja2.Environment.filters['myfilter'] = myfilter
+
+# http://matthiaseisen.com/pp/patterns/p0198/
 def render(fname_tmpl, context):
     """render fills a template file with values from a dict."""
     path, basename = os.path.split(fname_tmpl)
-    return jinja2.Environment(
-        loader=jinja2.FileSystemLoader(path or './')
-    ).get_template(basename).render(context)
+    env = jinja2.Environment( loader=jinja2.FileSystemLoader(path or './') )
+    env.filters['myfilter'] = myfilter
+    return env.get_template(basename).render(context)
 
 def fill(varsjson, templ_fname, output_fname):
     """Read json variable data, fill it in the template and write result to file."""

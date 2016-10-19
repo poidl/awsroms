@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# TODO: update all packages? Would that require a restart (kernel updates etc.)?
+
+# Post install script. Executed as root, do not use sudo (will fail).
+yum -y install netcdf-fortran-devel
+
+
+# On centos ami-d5f52eb6, you can't serve directories with sshfs due to a bug in AWS's Chef recipies. Fix by softlinking
+FILE=/usr/libexec/sftp-server
+if [ ! -f $FILE ]; then
+    ln -s /usr/libexec/openssh/sftp-server $FILE
+fi
+
+# TODO don't hardcode these variables
+MYUSER=centos
+USERHOME=/home/$MYUSER
+
+function extract {
+    BNAME=$(basename $1)
+    SUFFIX="${BNAME##*.}"
+    case $SUFFIX in
+    gz)
+        expr $BNAME : '.*\(tar.gz$\)'
+        case $? in
+        0)
+            su $MYUSER -c "tar -xf $BNAME"
+            exit 0
+            ;;
+        esac
+    esac
+    echo "unknown extension in \""$BNAME"\""
+    exit 1
+}
+
+# Download publickly accessible file and unpack
+function get_www {
+    # execute commands as non-root to get the right permissions
+    su $MYUSER -c "wget $1"
+    extract $1
+}
+
+# Download (possibly non-public) file from S3 and unpack
+function get_s3 {
+    # Note that during template filling, the s3_read_write_resource is converted to an s3 uri
+    su $MYUSER -c "aws s3 cp {{ s3_read_write_resource | myfilter('s3arntouri') }}/$1 ."
+    extract $1
+}
+
+# get the cfn_node_type
+. /opt/cfncluster/cfnconfig
+if [ "$cfn_node_type" == "MasterServer" ]; then
+
+    # TODO: do this in parallel
+    cd $USERHOME
+    get_www https://github.com/poidl/awsroms/archive/master.tar.gz
+    get_s3 roms.tar.gz
+    # get_www https://s3-ap-southeast-1.amazonaws.com/romsaws/roms.tar.gz
+
+fi
+
+
+
