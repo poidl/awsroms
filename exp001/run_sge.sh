@@ -5,9 +5,11 @@
 #$ -S /bin/bash
 #
 
+mkdir -p nc/out
+
 MPI_DIR=/usr/lib64/openmpi
-NSLOTS=2
+NSLOTS=1
 MACHINEFILE=machinefile
 
-$MPI_DIR/bin/mpirun -np $NSLOTS oceanM ocean_upwelling.in
+$MPI_DIR/bin/mpirun -np $NSLOTS oceanM ocean_benchmark1.in
         
