@@ -21,7 +21,7 @@ case $1 in
         do 
             cd exp$ii
             eval `grep NSLOTS= run_sge.sh`
-            qsub -pe mpi $NSLOTS run_sge.sh
+            qsub -N exp$ii -pe mpi $NSLOTS run_sge.sh
             cd ..
         done
         ;;
@@ -39,5 +39,3 @@ case $1 in
         echo "Usage: mmake build|run|clean"
         ;;
 esac
-
-
