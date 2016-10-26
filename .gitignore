@@ -10,3 +10,5 @@ __pycache__
 *.pyc
 machinefile
 run_sge.sh.o*
+.tmp
+exp*.o*
