@@ -12,9 +12,6 @@ The long-term goal is to produce configuration tools which are portable between 
 
 * cfncluster seems to be using Chef, which is written in Ruby/Erlang. Scientists are probably more familiar with Python than Ruby/Erlang. Can we use Ansible instead, which is written in Python? This would increase transparency, accessablility, etc.
 
-### TODO
-
-everything minus an ambitious Readme file
 
 ### Preliminary results
 
