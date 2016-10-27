@@ -15,3 +15,8 @@ The long-term goal is to produce configuration tools which are portable between 
 ### TODO
 
 everything minus an ambitious Readme file
+
+### Preliminary results
+
+![Figure](postprocess/figures/met.svg)
+
