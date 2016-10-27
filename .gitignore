@@ -12,3 +12,6 @@ machinefile
 run_sge.sh.o*
 .tmp
 exp*.o*
+*png
+*svg
+
