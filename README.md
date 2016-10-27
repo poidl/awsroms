@@ -18,4 +18,7 @@ everything minus an ambitious Readme file
 
 ### Preliminary results
 
-![Figure](https://github.com/poidl/awsroms/blob/master/postprocess/figures/met.svg)
+![Figure](https://raw.githubusercontent.com/poidl/awsroms/master/postprocess/figures/met.svg)
+
+
+<img src="https://raw.githubusercontent.com/poidl/awsroms/master/postprocess/figures/met.svg" width="50%" height="144">
