@@ -15,6 +15,9 @@ The long-term goal is to produce configuration tools which are portable between 
 
 ### Preliminary results
 
+<figure>
+    <img src="postprocess/figures/met.png" width="50%">
+    <figcaption>Mean elapsed CPU time for the ROMS "small" benchmark test (benchmark1.in), as a function of the number of cores. Computations are performed on t2.micro instances of AWS.</figcaption>
+</figure>
 
-<img src="postprocess/figures/met.png" width="50%">
 
