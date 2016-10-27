@@ -18,12 +18,12 @@ everything minus an ambitious Readme file
 
 ### Preliminary results
 
-![Figure](postprocess/figures/met.png)
+![Figure](postprocess/figures/met.png | width=50)
 
 
 
 ![Figure](https://raw.githubusercontent.com/poidl/awsroms/master/postprocess/figures/met.svg)
 
 
-<img src="https://raw.githubusercontent.com/poidl/awsroms/master/postprocess/figures/met.svg" width="50%" height="144">
+<img src="postprocess/figures/met.png" width="50%" height="144">
 
