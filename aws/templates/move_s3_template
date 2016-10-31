@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# TODO: compress files? Maybe unnecessary for moving within AWS, but what about subsequent transfer from S3 to a PC?
+
+case $1 in
+
+    put)
+        if [ $# -ne 3 ]; then
+          echo "Usage: move_s3 put BEGIN END"
+          exit 1
+        fi
+        for ii in `seq -f "%03g" $2 $3`
+        do 
+            aws s3 cp exp$ii/exp$ii.o* {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/
+        done
+        ;;
+    *)
+        echo "Usage: move_s3 put"
+        ;;
+
+esac

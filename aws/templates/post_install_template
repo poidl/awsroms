@@ -57,6 +57,15 @@ if [ "$cfn_node_type" == "MasterServer" ]; then
     get_s3 roms.tar.gz
     # get_www https://s3-ap-southeast-1.amazonaws.com/romsaws/roms.tar.gz
 
+    # Make a non-version controlled directory, containing scripts with private AWS data
+    su $MYUSER -c "mkdir novc"
+    # Put it in the user's PATH
+    su $MYUSER -c 'echo "export PATH=$PATH:~/novc">> ~/.bashrc'
+    cd novc
+    get_s3 move_s3.sh
+    su $MYUSER -c "chmod u+x *"
+
+
 fi
 
 
