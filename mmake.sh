@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BEGIN=1
-END=3
+END=6
 
 case $1 in
 

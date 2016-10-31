@@ -1,0 +1,8 @@
+The following are "benchmark1.in" runs. They differ only in number of cores and tiling. Max_queue_size= 1+2*2+3*4=17
+
+exp001: 1x1
+exp002: 1x2
+exp003: 2x1
+exp004: 2x2
+exp005: 1x4
+exp006: 4x1

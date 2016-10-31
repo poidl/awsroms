@@ -17,6 +17,6 @@ The long-term goal is to produce configuration tools which are portable between 
 
 <img src="postprocess/figures/met.png" width="50%">
 
-Mean elapsed CPU time for the ROMS "small" benchmark test (benchmark1.in), as function of the number of cores. Computations are performed on t2.micro instances of AWS.
+Mean elapsed CPU time for the ROMS "small" benchmark test (benchmark1.in), as function of the number of cores. Computations are performed on t2.micro instances of AWS, which have one core ("vCPU") per node. The tiling was 1x1, 2x1 and 2x2 for the 1-,2- and 4-core simulation, respectively. The tiling chosen for the 4-core simulation is presumably not optimal, given that the domain of the "small" benchmark test is 512x64 points, and thus is much larger in i- than in j-direction (indicating a 4x1 tiling may be preferable).
 
 
