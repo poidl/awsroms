@@ -48,7 +48,7 @@ z = list(zip(ntilei, myx, ntilej))
 labels = [''.join(str(x) for x in z[jj]) for jj in range(STOP-START+1)]
 print(labels)
 
-fig = plt.figure()
+fig = plt.figure(figsize=(7, 6))
 ax = fig.add_subplot(111)
 ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
 # ax.plot(nproc, met)
