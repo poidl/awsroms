@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 matplotlib.use('Agg')
 
 START = 1
-STOP = 4
+STOP = 6
 
 # mean elapsed time
 met = np.zeros(STOP-START)
@@ -18,7 +18,9 @@ met = np.zeros(STOP-START)
 nproc = np.zeros(STOP-START, dtype=int)
 
 for ii in range(START, STOP):
-    os.system('grep "Node   #" ../exp%03d/run_sge.sh.* |awk \'{print $5}\' >./.tmp' % (ii))
+    cmdstr = '''grep "Node   #" ../experiments/exp%03d/run_sge.sh.* |
+         awk \'{print $5}\' >./.tmp'''
+    os.system(cmdstr % (ii))
     file = open('./.tmp', 'r')
     n = file.read()
     a = np.fromstring(n, sep='\n')

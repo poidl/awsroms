@@ -14,8 +14,22 @@ case $1 in
             aws s3 cp exp$ii/exp$ii.o* {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/
         done
         ;;
+
+    get)
+        if [ $# -ne 4 ]; then
+          echo "Usage: move_s3 get BEGIN END EXP_ROOTPATH"
+          exit 1
+        fi
+        for ii in `seq -f "%03g" $2 $3`
+        do 
+            cd $4/exp$ii
+            aws s3 cp {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/* .
+            cd ..
+        done
+        ;;
+
     *)
-        echo "Usage: move_s3 put"
+        echo "Usage: move_s3 put|get"
         ;;
 
 esac

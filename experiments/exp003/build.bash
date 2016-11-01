@@ -99,7 +99,7 @@ export     MY_PROJECT_DIR=${PWD}
 # to the code and inputs on differing machines.
 
 #export       MY_ROMS_SRC=${MY_ROOT_DIR}/branches/arango
-export       MY_ROMS_SRC=${PWD}/../../roms
+export       MY_ROMS_SRC=${PWD}/../../../roms
 
 # Set path of the directory containing makefile configuration (*.mk) files.
 # The user has the option to specify a customized version of these files

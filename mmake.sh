@@ -3,25 +3,27 @@
 BEGIN=1
 END=6
 
+EXPPATH=./experiments
+
 case $1 in
 
     build)
-        cd exp001
+        cd $EXPPATH/exp001
         ./build.bash
         cd ..
 
         for ii in `seq -f "%03g" $(($BEGIN+1)) $END`
         do 
-            cp exp001/oceanM exp$ii/
+            cp $EXPPATH/exp001/oceanM $EXPPATH/exp$ii/
         done
         ;;
 
     run)
         for ii in `seq -f "%03g" $BEGIN $END`
         do 
-            cd exp$ii
+            cd $EXPPATH/exp$ii
             eval `grep NSLOTS= run_sge.sh`
-            qsub -N exp$ii -pe mpi $NSLOTS run_sge.sh
+            qsub -N $EXPPATH/exp$ii -pe mpi $NSLOTS run_sge.sh
             cd ..
         done
         ;;
@@ -29,7 +31,7 @@ case $1 in
     clean)
         for ii in `seq -f "%03g" $BEGIN $END`
         do 
-            cd  exp$ii
+            cd  $EXPPATH/exp$ii
             rm -r Build oceanM
             cd ..
         done

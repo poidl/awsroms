@@ -33,7 +33,7 @@ function extract {
     return 1
 }
 
-# Download publickly accessible file and unpack
+# Download publicly accessible file and unpack
 function get_www {
     # execute commands as non-root to get the right permissions
     su $MYUSER -c "wget $1"
