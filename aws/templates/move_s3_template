@@ -23,7 +23,12 @@ case $1 in
         for ii in `seq -f "%03g" $2 $3`
         do 
             cd $4/exp$ii
-            aws s3 cp {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/* .
+            # check if "out" directory exists
+            if !(test -d out)
+            then
+                mkdir out
+            fi
+            aws s3 sync {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii out
             cd ..
         done
         ;;
