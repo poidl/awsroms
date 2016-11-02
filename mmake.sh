@@ -1,7 +1,7 @@
 #!/bin/bash
 
-BEGIN=1
-END=6
+BEGIN=7
+END=7
 
 EXPPATH=./experiments
 
@@ -19,11 +19,14 @@ case $1 in
         ;;
 
     run)
+        if [ $# -ne 2 ]; then
+          echo "Usage: mmake run NSLOTS"
+          exit 1
+        fi
         for ii in `seq -f "%03g" $BEGIN $END`
         do 
             cd $EXPPATH/exp$ii
-            eval `grep NSLOTS= run_sge.sh`
-            qsub -N $EXPPATH/exp$ii -pe mpi $NSLOTS run_sge.sh
+            qsub -N exp$ii -pe mpi $2 run_sge.sh
             cd ..
         done
         ;;
