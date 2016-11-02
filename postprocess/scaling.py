@@ -14,8 +14,8 @@ STOP = 6
 
 # mean elapsed time
 met = np.zeros(STOP-START+1)
-# number of processors/cores
-nproc = np.zeros(STOP-START+1, dtype=int)
+# number of vcpus
+nvcpu = np.zeros(STOP-START+1, dtype=int)
 ntilei = np.zeros(STOP-START+1, dtype=int)
 ntilej = np.zeros(STOP-START+1, dtype=int)
 
@@ -40,7 +40,7 @@ for ii in range(START, STOP+1):
     os.system(cmdstr % (ii, ii))
     a = readarray('.tmp')
     met[ii-1] = np.mean(a)
-    nproc[ii-1] = a.size
+    nvcpu[ii-1] = a.size
 
 
 myx = 'x'*(STOP-START+1)
@@ -51,14 +51,14 @@ print(labels)
 fig = plt.figure(figsize=(7, 6))
 ax = fig.add_subplot(111)
 ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
-# ax.plot(nproc, met)
-for i, j in zip(nproc, met):
+# ax.plot(nvcpu, met)
+for i, j in zip(nvcpu, met):
     ax.plot(i, j, 'x', markersize=15, markeredgewidth=3)
 ax.legend(labels, numpoints=1)
 ax.text(-0.12, 1.02, '1)', fontsize=15, transform=ax.transAxes)
-plt.xticks(nproc)
-plt.xlim(np.min(nproc)-0.5, np.max(nproc)+0.5)
-plt.xlabel('Number of cores')
+plt.xticks(nvcpu)
+plt.xlim(np.min(nvcpu)-0.5, np.max(nvcpu)+0.5)
+plt.xlabel('Number of vCPUs')
 plt.ylabel('Mean elapsed CPU time (s)')
 plt.grid()
 fig.savefig('figures/met.png')

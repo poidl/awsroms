@@ -6,7 +6,7 @@ Test the ROMS ocean model on AWS
 
 <img src="postprocess/figures/met.png" width="50%">
 
-Figure 1: CPU time per compute node for the ROMS "small" benchmark test (benchmark1.in), as function of the number of cores. Computations are performed on t2.micro instances of AWS, which have one core ("vCPU") per node (as of 2016/11/01). Each data point shows the average time of all nodes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64 point domain. The result indicates that "square-like" partitions yield better performance, and slightly nonlinear scaling.
+Figure 1: CPU time per vCPU for the ROMS "small" benchmark test (benchmark1.in), as function of the number of vCPUs. Computations are performed on t2.micro instances of AWS, which have one vCPU per node (as of 2016/11/01). Each data point shows the average over all vCPUs, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64 point domain. The result indicates that "square-like" partitions yield better performance, and nonlinear scaling.
 
 ### Why AWS?
 
