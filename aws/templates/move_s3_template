@@ -25,7 +25,7 @@ case $1 in
 
     get)
         if [ $# -ne 4 ]; then
-          echo "Usage: move_s3 get BEGIN END EXP_ROOTPATH"
+          echo "Usage: move_s3 get BEGIN END ROOTPATH"
           exit 1
         fi
         for ii in `seq -f "%03g" $2 $3`
