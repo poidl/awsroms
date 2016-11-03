@@ -10,20 +10,20 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-# START = 1
-# STOP = 6
-# FIGNO = 1
-# FIGNAME = 'figures/met_t2micro.png'
+START = 1
+STOP = 6
+FIGNO = 1
+FIGNAME = 'figures/met_t2micro.png'
 
-START = 7
-STOP = 12
-FIGNO = 2
-FIGNAME = 'figures/met_c4large.png'
+# START = 7
+# STOP = 12
+# FIGNO = 2
+# FIGNAME = 'figures/met_c4large.png'
 
 # mean elapsed time
 met = np.zeros(STOP-START+1)
-# number of vcpus
-nvcpu = np.zeros(STOP-START+1, dtype=int)
+# number of procs
+nproc = np.zeros(STOP-START+1, dtype=int)
 ntilei = np.zeros(STOP-START+1, dtype=int)
 ntilej = np.zeros(STOP-START+1, dtype=int)
 
@@ -50,7 +50,7 @@ for ii in range(START, STOP+1):
     os.system(cmdstr % (ii, ii))
     a = readarray('.tmp')
     met[jj-1] = np.mean(a)
-    nvcpu[jj-1] = a.size
+    nproc[jj-1] = a.size
 
 
 myx = 'x'*(STOP-START+1)
@@ -61,15 +61,15 @@ print(labels)
 fig = plt.figure(figsize=(7, 6))
 ax = fig.add_subplot(111)
 ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
-# ax.plot(nvcpu, met)
-for i, j in zip(nvcpu, met):
+# ax.plot(nproc, met)
+for i, j in zip(nproc, met):
     ax.plot(i, j, 'x', markersize=15, markeredgewidth=3)
 ax.legend(labels, numpoints=1)
 ax.text(-0.12, 1.02, str(FIGNO)+')', fontsize=15, transform=ax.transAxes)
-plt.xticks(nvcpu)
-plt.xlim(np.min(nvcpu)-0.5, np.max(nvcpu)+0.5)
+plt.xticks(nproc)
+plt.xlim(np.min(nproc)-0.5, np.max(nproc)+0.5)
 plt.ylim(40, 180)
-plt.xlabel('Number of vCPUs')
-plt.ylabel('Mean elapsed CPU time (s)')
+plt.xlabel('Number of processes')
+plt.ylabel('Mean elapsed "CPU time" (s)')
 plt.grid()
 fig.savefig(FIGNAME)

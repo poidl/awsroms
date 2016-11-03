@@ -8,11 +8,11 @@ All results shown were produced with ROMS, compiled with Open MPI using gfortran
 
 <img src="postprocess/figures/met_t2micro.png" width="50%">
 
-Figure 1: CPU time per vCPU for the ROMS "small" benchmark test (benchmark1.in), as function of the number of vCPUs. Computations are performed on t2.micro instances of AWS, which have one vCPU per node (as of 2016/11/01). Each data point shows the average over all vCPUs, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64 point domain. The result suggests that partitioning along the first dimension yields better performance, and that the problem scales nonlinearly.
+Figure 1: Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (as of 2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64 point domain. The result suggests that partitioning along the first dimension yields better performance, and that the problem scales nonlinearly.
 
 <img src="postprocess/figures/met_c4large.png" width="50%">
 
-Figure 2: Same as Fig. 1, but computations are performed on c4.large instances of AWS, which have 2 vCPUs per node. In the case of c4 instances, a vCPU is defined as a single thread of a custom 2.9 GHz Intel Xeon E5-2666 v3 (Haswell) processor (2016/11/01).
+Figure 2: Same as Fig. 1, but computations are performed on c4.large instances of AWS, which have 2 vCPUs per (virtual) node. In the case of c4 instances, a vCPU is defined as a single thread of a custom 2.9 GHz Intel Xeon E5-2666 v3 (Haswell) processor (2016/11/01).
 
 ### Why AWS?
 
