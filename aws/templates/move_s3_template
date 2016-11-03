@@ -11,7 +11,15 @@ case $1 in
         fi
         for ii in `seq -f "%03g" $2 $3`
         do 
-            aws s3 cp exp$ii/exp$ii.o* {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/
+            OUT=experiments/exp$ii/out
+            # check if "out" directory exists
+            if !(test -d $OUT)
+            then
+                mkdir $OUT
+            fi
+            mv experiments/exp$ii/exp$ii.o* $OUT
+            # Cannot use "sync" here due to permissions (list operation not allowed)
+            aws s3 cp $OUT {{ s3_read_write_resource | myfilter('s3arntouri') }}/exp$ii/ --recursive
         done
         ;;
 
