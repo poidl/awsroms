@@ -9,8 +9,14 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+
 START = 1
 STOP = 6
+figname = 'figures/met_t2micro.png'
+
+# START = 7
+# STOP = 12
+# figname = 'figures/met_c4large.png'
 
 # mean elapsed time
 met = np.zeros(STOP-START+1)
@@ -25,22 +31,24 @@ def readarray(fname):
     n = file.read()
     return np.fromstring(n, sep='\n')
 
+jj = 0
 for ii in range(START, STOP+1):
+    jj += 1
     cmdstr = ('grep "NtileI =" ../experiments/exp%03d/ocean_benchmark1.in |'
               'awk \'{print $3}\' >./.tmp')
     os.system(cmdstr % (ii))
-    ntilei[ii-1] = readarray('.tmp')
+    ntilei[jj-1] = readarray('.tmp')
     cmdstr = ('grep "NtileJ =" ../experiments/exp%03d/ocean_benchmark1.in |'
               'awk \'{print $3}\' >./.tmp')
     os.system(cmdstr % (ii))
-    ntilej[ii-1] = readarray('.tmp')
+    ntilej[jj-1] = readarray('.tmp')
 
     cmdstr = '''grep "Node   #" ../experiments/exp%03d/out/exp%03d.o* |awk \'{print $5}\' >./.tmp'''
     # print(cmdstr % (ii, ii))
     os.system(cmdstr % (ii, ii))
     a = readarray('.tmp')
-    met[ii-1] = np.mean(a)
-    nvcpu[ii-1] = a.size
+    met[jj-1] = np.mean(a)
+    nvcpu[jj-1] = a.size
 
 
 myx = 'x'*(STOP-START+1)
@@ -58,7 +66,8 @@ ax.legend(labels, numpoints=1)
 ax.text(-0.12, 1.02, '1)', fontsize=15, transform=ax.transAxes)
 plt.xticks(nvcpu)
 plt.xlim(np.min(nvcpu)-0.5, np.max(nvcpu)+0.5)
+plt.ylim(40, 180)
 plt.xlabel('Number of vCPUs')
 plt.ylabel('Mean elapsed CPU time (s)')
 plt.grid()
-fig.savefig('figures/met.png')
+fig.savefig(figname)
