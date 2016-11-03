@@ -10,13 +10,15 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-START = 1
-STOP = 6
-figname = 'figures/met_t2micro.png'
+# START = 1
+# STOP = 6
+# FIGNO = 1
+# FIGNAME = 'figures/met_t2micro.png'
 
-# START = 7
-# STOP = 12
-# figname = 'figures/met_c4large.png'
+START = 7
+STOP = 12
+FIGNO = 2
+FIGNAME = 'figures/met_c4large.png'
 
 # mean elapsed time
 met = np.zeros(STOP-START+1)
@@ -63,11 +65,11 @@ ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
 for i, j in zip(nvcpu, met):
     ax.plot(i, j, 'x', markersize=15, markeredgewidth=3)
 ax.legend(labels, numpoints=1)
-ax.text(-0.12, 1.02, '1)', fontsize=15, transform=ax.transAxes)
+ax.text(-0.12, 1.02, str(FIGNO)+')', fontsize=15, transform=ax.transAxes)
 plt.xticks(nvcpu)
 plt.xlim(np.min(nvcpu)-0.5, np.max(nvcpu)+0.5)
 plt.ylim(40, 180)
 plt.xlabel('Number of vCPUs')
 plt.ylabel('Mean elapsed CPU time (s)')
 plt.grid()
-fig.savefig(figname)
+fig.savefig(FIGNAME)
