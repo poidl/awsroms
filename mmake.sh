@@ -8,13 +8,15 @@ EXPPATH=./experiments
 case $1 in
 
     build)
-        cd $EXPPATH/exp007
+        # zero pad $BEGIN
+        printf -v N "%03g" $BEGIN
+        SINGLEBUILDPATH=$EXPPATH/exp$N
+        cd $SINGLEBUILDPATH
         ./build.bash
-        cd ..
-
+        cd ../..
         for ii in `seq -f "%03g" $(($BEGIN+1)) $END`
         do 
-            cp $EXPPATH/exp007/oceanM $EXPPATH/exp$ii/
+            cp $SINGLEBUILDPATH/oceanM $EXPPATH/exp$ii/
         done
         ;;
 
@@ -23,8 +25,8 @@ case $1 in
         do 
             cd $EXPPATH/exp$ii
             eval `grep NSLOTS= run_sge.sh`
-            qsub -N $EXPPATH/exp$ii -pe mpi $NSLOTS run_sge.sh
-            cd ..
+            qsub -N exp$ii -pe mpi $NSLOTS run_sge.sh
+            cd ../..
         done
         ;;
 
@@ -33,7 +35,7 @@ case $1 in
         do 
             cd  $EXPPATH/exp$ii
             rm -r Build oceanM
-            cd ..
+            cd ../..
         done
         ;;
 
