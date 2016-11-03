@@ -8,7 +8,7 @@
 mkdir -p nc/out
 
 MPI_DIR=/usr/lib64/openmpi
-NSLOTS=1
+NSLOTS=4
 MACHINEFILE=machinefile
 
 $MPI_DIR/bin/mpirun -np $NSLOTS oceanM ocean_benchmark1.in

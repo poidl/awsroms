@@ -9,4 +9,10 @@ exp006: 4x1
 
 "benchmark1.in" runs on c4.large
 
-exp007: 4x1
+exp007: 1x1
+exp008: 1x2
+exp009: 2x1
+exp010: 2x2
+exp011: 1x4
+exp012: 4x1
+
