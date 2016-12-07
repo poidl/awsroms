@@ -4,7 +4,7 @@ Test the ROMS ocean model on AWS
 
 ### Preliminary results
 
-See some [preliminary results](https://github.com/poidl/awsroms/doc/web/main.html).
+See some [preliminary results](http://htmlpreview.github.io/?https://github.com/poidl/awsroms/blob/master/doc/web/index.html).
 
 ### Why AWS?
 
