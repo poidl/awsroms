@@ -13,3 +13,4 @@ run_sge.sh.o*
 .tmp
 exp*.o*
 *svg
+doc/nobackup

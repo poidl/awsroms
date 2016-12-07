@@ -5,6 +5,7 @@
 
 ## TODO
 
+* T2 may be faster than C4 for a SHORT TIME due to "burstable performance". Pin that down in the experiments and interpretation.
 * mkdir exp*/nc/out
 
 
