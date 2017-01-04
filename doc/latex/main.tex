@@ -74,25 +74,32 @@
 	\maketitle
 
 \section{Preliminary results}
-	All results shown were produced with ROMS, compiled with Open MPI using gfortran.
+	All results shown were produced with ROMS \citep{shchepetkin2005regional}, compiled with Open MPI using gfortran.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\textwidth]{met_t2micro.png}
+		\includegraphics[width=0.5\textwidth]{met_t2micro.pdf}
 		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance, and that the problem scales nonlinearly.}
 		\label{fig:met_t2micro}
 	\end{figure}
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\textwidth]{met_c4large.png}
+	\includegraphics[width=0.5\textwidth]{met_c4large.pdf}
 	\caption{Same as Fig. \ref{fig:met_t2micro}, but computations are performed on c4.large instances of AWS, which have 2 vCPUs per (virtual) node. In the case of c4 instances, a vCPU is defined as a single thread of a custom 2.9 GHz Intel Xeon E5-2666 v3 (Haswell) processor (2016/11/01).}
 	\label{fig:met_c4large}
 \end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{met_c44xlarge.pdf}
+	\caption{Time (in seconds) spent per process for the ROMS "medium" benchmark test (benchmark2.in), as function of the number of processes. Computations are performed on c4.4xlarge instances of AWS, which have 16 vCPUs per (virtual) node.}
+	\label{fig:met_c4large}
+\end{figure}
 	
-%	\bibliographystyle{model2-names}
-%	\bibliography{paper.bib}
-	
+\bibliography{main.bib}
+\bibliographystyle{model2-names}
+
 \end{document}
 
  

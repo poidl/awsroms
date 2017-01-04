@@ -1,0 +1,12 @@
+[htlprettify]
+# Root directory of latex project, containing latex source
+path = ../latex
+# Build directory for latex and htlatex
+tmpdir = tmp
+# Set an alternative document title and subtitle. Empty string defaults to (possibly
+# too long) latex title.
+title = "Notes on running ROMS on Amazon Web Services (DRAFT)"
+subtitle = 
+# Set an alternative document title in <head> (title for browser tabs). Empty string defaults to (possibly
+# too long) latex title.
+headtitle = "ROMS AWS"
