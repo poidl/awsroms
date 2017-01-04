@@ -2,9 +2,13 @@
 
 Test the ROMS ocean model on AWS
 
-### Preliminary results
+### Example of a result
 
-See some [preliminary results](http://htmlpreview.github.io/?https://github.com/poidl/awsroms/blob/master/doc/web/index.html).
+<img src="doc/web/figures/met_c44xlarge.png" width="50%">
+
+Figure 3: Time (in seconds) spent per process for the ROMS ”medium” benchmark test (benchmark2.in), as function of the number of processes. Computations are performed on c4.4xlarge instances of AWS, which have 16 vCPUs per (virtual) node.
+
+More [preliminary results](http://htmlpreview.github.io/?https://github.com/poidl/awsroms/blob/master/doc/web/index.html).
 
 ### Why AWS?
 
