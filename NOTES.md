@@ -55,17 +55,20 @@ exp027: 16x1
 ntilei=(1 1 2 2 1 4 2 4 1 8 4 2 8 1 16)  
 ntilej=(1 2 1 2 4 1 4 2 8 1 4 8 2 16 1)
 slots=(1 2 2 4 4 4 8 8 8 8 16 16 16 16 16)  
+dirs=$(seq -f "%03g" 13 27)
 
-for i in $(seq -f "%03g" 13 27); do cp -r experiments/exp001 experiments/exp$i; done
+for i in $dirs; do cp -r experiments/exp001 experiments/exp$i; done
 
-for i in $(seq -f "%03g" 13 27); do cp ../roms/ROMS/External/ocean_benchmark2.in experiments/exp$i/; done
+for i in $dirs; do cp ../roms/ROMS/External/ocean_benchmark2.in experiments/exp$i/; done
 
-for i in $(seq -f "%03g" 13 27); do sed -i  s/benchmark1\.in/benchmark2\.in/g  experiments/exp$i/run_sge.sh; done
+for i in $dirs; do sed -i  s/benchmark1\.in/benchmark2\.in/g  experiments/exp$i/run_sge.sh; done
 
-dirs=($(seq -f "%03g" 13 27))
+dirs_array=($dirs)
 
-for i in "${!slots[@]}"; do sed -i s/SLOTS=.*/SLOTS="${slots[$i]}"/g  experiments/exp${dirs[$i]}/run_sge.sh; done
+for i in "${!slots[@]}"; do sed -i s/SLOTS=.*/SLOTS="${slots[$i]}"/g  experiments/exp${dirs_array[$i]}/run_sge.sh; done
 
-for i in "${!ntilei[@]}"; do sed -i s/"NtileI == .*"/"NtileI == ${ntilei[$i]}"/g  experiments/exp${dirs[$i]}/ocean_benchmark2.in; done  
-for i in "${!ntilei[@]}"; do sed -i s/"NtileJ == .*"/"NtileJ == ${ntilej[$i]}"/g  experiments/exp${dirs[$i]}/ocean_benchmark2.in; done
+for i in "${!ntilei[@]}"; do sed -i s/"NtileI == .*"/"NtileI == ${ntilei[$i]}"/g  experiments/exp${dirs_array[$i]}/ocean_benchmark2.in; done  
+for i in "${!ntilei[@]}"; do sed -i s/"NtileJ == .*"/"NtileJ == ${ntilej[$i]}"/g  experiments/exp${dirs_array[$i]}/ocean_benchmark2.in; done
+
+for i in $dirs; do sed -i s/"VARNAME = .*"/"VARNAME = \.\.\/\.\.\/\.\.\/roms\/ROMS\/External\/varinfo.dat"/g experiments/exp$i/ocean_benchmark2.in; done
 ```
