@@ -12,21 +12,21 @@ import matplotlib.pyplot as plt
 # START = 1
 # STOP = 6
 # FIGNO = 1
-# FIGNAME = '../doc/figures/met_t2micro.svg'
+# FIGNAME = '../docs/figures/met_t2micro.svg'
 # infile = "ocean_benchmark1.in"
 # ylim = (40, 180)
 
 # START = 7
 # STOP = 12
 # FIGNO = 2
-# FIGNAME = '../doc/figures/met_c4large.svg'
+# FIGNAME = '../docs/figures/met_c4large.svg'
 # infile = "ocean_benchmark1.in"
 # ylim = (40, 180)
 
 START = 13
 STOP = 27
 FIGNO = 3
-FIGNAME = '../doc/figures/met_c44xlarge.svg'
+FIGNAME = '../docs/figures/met_c44xlarge.svg'
 infile = "ocean_benchmark2.in"
 ylim = (0, 900)
 

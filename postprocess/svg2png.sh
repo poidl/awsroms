@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd  ../doc/figures
-svgs=$(ls *.svg)
-for i in $svgs; do
-    inkscape $i --export-png=${i%.svg}".png"
-done
+cd  ../docs/figures
+inkscape $1 --export-png=../../doc/figures_png/${1%.svg}".png"
+
