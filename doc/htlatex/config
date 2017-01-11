@@ -8,7 +8,7 @@ figurepath = /home/stefan/work/awsroms/doc/figures
 installpath = /home/stefan/work/awsroms/docs
 # Installation directory for figures, RELATIVE to installpath. This is hard-coded
 # into the html file, and should be a relative path for portability
-installimgpath = figures
+installimgpath = ./figures
 
 # Build directory for latex and htlatex
 builddir = htl_tmp_builddir

@@ -20,20 +20,20 @@
 <!-- xhtml,charset=utf-8,mathml,html -->
 <meta content="main.tex" name="src"/>
 <link href="main.css" rel="stylesheet" type="text/css"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/></head><div style="overflow-x: scroll;"><body style="font-size: 100%; width=100%; max-width: 800px; padding: 1em; margin: auto;">
+<meta content="width=device-width, initial-scale=1" name="viewport"/><script async="true" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_CHTML" type="text/javascript"></script></head><div style="overflow-x: scroll;"><body style="font-size: 100%; width=100%; max-width: 800px; padding: 1em; margin: auto;">
 <div class="maketitle">
 <h2 class="titleHead">Notes on running ROMS on Amazon Web Services (DRAFT)</h2>
 <div class="author"><span class="cmss-12x-x-120">Stefan Riha</span><span class="thank-mark"><a href="#tk-1"><span class="cmsy-10x-x-144">∗</span></a></span></div><br/>
 <div class="date"><span class="cmss-12x-x-120">January 11, 2017</span></div>
 <div class="thanks"><br/><a id="tk-1"></a><span class="thank-mark"><span class="cmsy-10x-x-120">∗</span></span>Email: stefan@sriha.net</div></div>
 <a id="x1-2r1"></a>
-<ol><a id="mycontents"></a><li><a href="#x1-10001">Preliminary results</a></li><li><a href="#x1-20001">References</a></li></ol><h3 class="sectionHead"><span class="titlemark">1   </span> <a id="x1-10001"></a>Preliminary results</h3>
+<ol><a id="mycontents"></a><li><a href="#x1-10001">Preliminary results</a></li><li><a href="#x1-40002">References</a></li></ol><h3 class="sectionHead"><span class="titlemark">1   </span> <a id="x1-10001"></a>Preliminary results</h3>
 <!--l. 76--><p class="noindent">All results shown were produced with ROMS (<a href="#Xshchepetkin2005regional">Shchepetkin and McWilliams</a>, <a href="#Xshchepetkin2005regional">2005</a>), compiled with Open MPI
 using gfortran.
 </p>
 <hr class="figure"/><div class="figure">
 <a id="x1-1001r1"></a>
-<!--l. 80--><p class="noindent" style="text-align:center"><img alt="PIC" src="figures/met_t2micro.svg" style="width: 71%; max-width: 800px;"/>
+<!--l. 80--><p class="noindent" style="text-align:center"><img alt="PIC" src="./figures/met_t2micro.svg" style="width: 71%; max-width: 800px;"/>
 <br/> </p><div class="caption"><span class="id">Figure 1: </span><span class="content">Time (in seconds) spent per process for the ROMS ”small” benchmark test (benchmark1.in),
 as function of the number of processes. Computations are performed on t2.micro instances of AWS,
 which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all
@@ -43,25 +43,99 @@ performance.</span></div><!--tex4ht:label?: x1-1001r1 -->
 </div><hr class="endfigure"/>
 <hr class="figure"/><div class="figure">
 <a id="x1-1002r2"></a>
-<!--l. 87--><p class="noindent" style="text-align:center"><img alt="PIC" src="figures/met_c4large.svg" style="width: 71%; max-width: 800px;"/>
+<!--l. 87--><p class="noindent" style="text-align:center"><img alt="PIC" src="./figures/met_c4large.svg" style="width: 71%; max-width: 800px;"/>
 <br/> </p><div class="caption"><span class="id">Figure 2: </span><span class="content">Same as Fig. <a href="#x1-1001r1">1<!--tex4ht:ref: fig:met_t2micro --></a>, but computations are performed on c4.large instances of AWS, which have 2
 vCPUs per (virtual) node. In the case of c4 instances, a vCPU is deﬁned as a single thread of a custom
 2.9 GHz Intel Xeon E5-2666 v3 (Haswell) processor (2016/11/01).</span></div><!--tex4ht:label?: x1-1002r2 -->
 </div><hr class="endfigure"/>
 <hr class="figure"/><div class="figure">
 <a id="x1-1003r3"></a>
-<!--l. 94--><p class="noindent" style="text-align:center"><img alt="PIC" src="figures/met_c44xlarge.svg" style="width: 71%; max-width: 800px;"/>
+<!--l. 94--><p class="noindent" style="text-align:center"><img alt="PIC" src="./figures/met_c44xlarge.svg" style="width: 71%; max-width: 800px;"/>
 <br/> </p><div class="caption"><span class="id">Figure 3:  </span><span class="content">Time  (in  seconds)  spent  per  process  for  the  ROMS  ”medium”  benchmark  test
 (benchmark2.in), as function of the number of processes. Computations are performed on c4.4xlarge
 instances of AWS, which have 16 vCPUs per (virtual) node.</span></div><!--tex4ht:label?: x1-1003r3 -->
 </div><hr class="endfigure"/>
-<a id="Q1-1-5"></a>
-<h3 class="likesectionHead"><a id="x1-20001"></a>References</h3>
+<a id="x1-1004r1"></a>
+<h4 class="subsectionHead"><span class="titlemark">1.1   </span> <a id="x1-20001"></a>Computational and monetary costs of a realistic study</h4>
+<!--l. 101--><p class="noindent">The preliminary test above allow a rough estimate of the computational and monetary costs involved in a
+realistic study. By monetary cost we mean the ﬁnancial cost of renting AWS’ hardware to conduct a study of
+a given computational cost. As an example we consider <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>), who validate the
+midshelf and surfzone circulation generated by a numerical model against observations. They use a
+coupled ROMS-SWAN model and compare it to observations from the 2006 Huntington Beach
+(San Pedro Bay, California, U.S.A.) experiment. We assume that such studies, which investigate
+the transport processes directly adjacent to the coast, are particularly important for commercial
+applications. Whether or not it is actually <span class="cmssi-12">technically feasible </span>to conduct such a highly complex
+state-of-the-art simulation on AWS’ cloud infrastructure, is not shown here. Instead, the objective here
+is to gain a (very rough) order-of-magnitude estimate of the involved cost, <span class="cmssi-12">assuming </span>technical
+feasibility.
+</p><!--l. 103--><p class="noindent">The numerical experiment of <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) consists of the following components:
+</p>
+<ul class="itemize1">
+<li class="itemize">Wind forcing
+      </li>
+<li class="itemize">Wave forcing
+      </li>
+<li class="itemize">Tide forcing
+      </li>
+<li class="itemize">Buoyancy forcing</li></ul>
+<!--l. 112--><p class="noindent">which are coupled by the open-source Coupled Ocean-Atmosphere-Wave-Sediment (COAWST) Transport
+model (<a href="#Xwarner2008using">Warner et al.</a>, <a href="#Xwarner2008using">2008</a>; <a href="#Xweb:coawst">Woods Hole Coastal and Marine Science Center</a>, <a href="#Xweb:coawst">2016</a>), which couples an
+atmospheric (Weather Research and Forecasting model, WRF), wave (SWAN), three-dimensional circulation
+and stratiﬁcation (ROMS) and sediment transport models. COAWST is integrated by the Model Coupling
+Toolkit (MCT, <a href="#Xweb:mct">UChicage Argonne</a> <a href="#Xweb:mct">2016</a>) to exchange data ﬁelds between the models. They use the following
+nested grids:
+</p>
+<ul class="itemize1">
+<li class="itemize">U.S. West Coast and eastern Paciﬁc (L0): <!--l. 115--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
+      area <!--l. 115--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 115--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mn>0</mn><mn>0</mn></math>
+      grid points)
+      </li>
+<li class="itemize">Southern California Bight (L1): <!--l. 116--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
+      area <!--l. 116--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+                                                                                                
+                                                                                                
+      (<!--l. 116--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn></math>
+      grid points)
+      </li>
+<li class="itemize">Interior bight region (L2): <!--l. 117--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 117--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 117--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>1</mn><mn>2</mn><mn>0</mn><mn>0</mn></math>
+      grid points)
+      </li>
+<li class="itemize">San Pedro Bay (L3): <!--l. 118--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>7</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 118--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 118--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>6</mn><mn>7</mn> <mo class="MathClass-bin">×</mo> <mn>9</mn><mn>3</mn><mn>4</mn></math>
+      grid points)</li></ul>
+<a id="x1-2001r5"></a>
+<h4 class="subsectionHead"><span class="titlemark">1.2   </span> <a id="x1-30002"></a>TODO</h4>
+<ul class="itemize1">
+<li class="itemize">Relate monetary cost of computations to cost of labor.</li></ul>
+<a id="Q1-1-7"></a>
+<h3 class="likesectionHead"><a id="x1-40002"></a>References</h3>
 <div class="thebibliography">
+<p class="bibitem"><span class="biblabel">
+<a id="Xkumar2015midshelf"></a><span class="bibsp">   </span></span>Kumar, N., Feddersen, F., Uchiyama, Y., McWilliams, J., OReilly, W., 2015.  Midshelf to surfzone
+  coupled roms–swan model data comparison of waves, currents, and temperature: Diagnosis of subtidal
+  forcings and response. Journal of Physical Oceanography 45, 1464–1490.
+  </p>
 <p class="bibitem"><span class="biblabel">
 <a id="Xshchepetkin2005regional"></a><span class="bibsp">   </span></span>Shchepetkin,  A.F.,  McWilliams,  J.C.,  2005.   The  regional  oceanic  modeling  system  (roms):  a
   split-explicit,  free-surface,  topography-following-coordinate  oceanic  model.    Ocean  Modelling  9,
   347–404.
+  </p>
+<p class="bibitem"><span class="biblabel">
+<a id="Xweb:mct"></a><span class="bibsp">   </span></span>UChicage Argonne, 2016.  Modeling Coupling Toolkit (MCT) Software.  <span class="underline"><a href="http://www.mcs.anl.gov/research/projects/mct/">External link</a></span> (Accessed on
+  Jan. 11, 2016).
+  </p>
+<p class="bibitem"><span class="biblabel">
+<a id="Xwarner2008using"></a><span class="bibsp">   </span></span>Warner, J.C., Perlin, N., Skyllingstad, E.D., 2008. Using the model coupling toolkit to couple earth
+  system models. Environmental Modelling &amp; Software 23, 1240–1249.
+  </p>
+<p class="bibitem"><span class="biblabel">
+<a id="Xweb:coawst"></a><span class="bibsp">   </span></span>Woods     Hole     Coastal     and     Marine     Science     Center,     2016.              COAWST:
+  A Coupled-Ocean-Atmosphere-Wave- Sediment Transport Modeling System. <span class="underline"><a href="https://woodshole.er.usgs.gov/operations/modeling/COAWST/">External link</a></span> (Accessed
+  on Jan. 11, 2016).
 </p>
 </div>
 </body></div></html>
