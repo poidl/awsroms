@@ -57,7 +57,7 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\graphicspath{{figures/}{matlab/omega/figures/}} 
+\graphicspath{{../figures/}} 
 
 %\linenumbers
 
@@ -79,7 +79,7 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\textwidth]{met_t2micro.pdf}
-		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance, and that the problem scales nonlinearly.}
+		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance.}
 		\label{fig:met_t2micro}
 	\end{figure}
 

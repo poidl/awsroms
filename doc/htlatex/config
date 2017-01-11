@@ -1,0 +1,23 @@
+[htlprettify]
+
+# Root directory of latex project, containing latex source (absolute path)
+path = /home/stefan/work/awsroms/doc/latex
+# Latex \graphicspath (absolute path)
+figurepath = /home/stefan/work/awsroms/doc/figures
+# Installation directory for html (absolute path)
+installpath = /home/stefan/work/awsroms/docs
+# Installation directory for figures, RELATIVE to installpath. This is hard-coded
+# into the html file, and should be a relative path for portability
+installimgpath = ../figures
+
+# Build directory for latex and htlatex
+builddir = htl_tmp_builddir
+
+
+# Set an alternative document title and subtitle. Empty string defaults to (possibly
+# too long) latex title.
+title = Notes on running ROMS on Amazon Web Services (DRAFT)
+subtitle = 
+# Set an alternative document title in <head> (title for browser tabs). Empty string defaults to (possibly
+# too long) latex title.
+headtitle = ROMS AWS

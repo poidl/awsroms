@@ -14,5 +14,4 @@ run_sge.sh.o*
 exp*.o*
 *pdf
 nobackup
-doc/web/tmp
-
+htl_tmp_builddir
