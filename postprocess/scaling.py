@@ -9,12 +9,12 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# START = 1
-# STOP = 6
-# FIGNO = 1
-# FIGNAME = '../doc/figures/met_t2micro.svg'
-# infile = "ocean_benchmark1.in"
-# ylim = (40, 180)
+START = 1
+STOP = 6
+FIGNO = 1
+FIGNAME = '../doc/figures/met_t2micro.svg'
+infile = "ocean_benchmark1.in"
+ylim = (40, 180)
 
 # START = 7
 # STOP = 12
@@ -30,12 +30,12 @@ import matplotlib.pyplot as plt
 # infile = "ocean_benchmark2.in"
 # ylim = (0, 900)
 
-START = 28
-STOP = 33
-FIGNO = 4
-FIGNAME = '../doc/figures/met_c48xlarge.svg'
-infile = "ocean_benchmark3.in"
-ylim = (0, 300)
+# START = 28
+# STOP = 33
+# FIGNO = 4
+# FIGNAME = '../doc/figures/met_c48xlarge.svg'
+# infile = "ocean_benchmark3.in"
+# ylim = (0, 300)
 
 # mean elapsed time
 met = np.zeros(STOP - START + 1)
@@ -76,20 +76,20 @@ z = list(zip(ntilei, myx, ntilej))
 labels = [''.join(str(x) for x in z[jj]) for jj in range(STOP - START + 1)]
 print(labels)
 
-ideal = met[0] / (nproc / 32)
+ideal = met[0] / (nproc / nproc[0])
 
 fig = plt.figure(figsize=(7, 6))
 ax = fig.add_subplot(111)
-ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
-# ax.plot(nproc, met)
 for i, j in zip(nproc, met):
-    ax.plot(i, j, 'x', markersize=15, markeredgewidth=3)
-ax.plot(nproc, ideal)
+    plt.loglog(i, j, 'x',  markersize=15, markeredgewidth=3, basex=2, basey=2)
+ax.loglog(nproc, ideal, basex=2, basey=2)
 ax.legend(labels, numpoints=1, fontsize=10)
 ax.text(-0.12, 1.02, str(FIGNO) + ')', fontsize=15, transform=ax.transAxes)
 plt.xticks(nproc)
 plt.xlim(np.min(nproc) - 0.5, np.max(nproc) + 0.5)
 plt.ylim(ylim)
+ax.xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+ax.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
 plt.xlabel('Number of processes')
 plt.ylabel('Mean elapsed "CPU time" (s)')
 plt.grid()

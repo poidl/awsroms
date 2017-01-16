@@ -92,7 +92,7 @@ All experiments are integrated for 200 time steps. No grid data is read or writt
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\textwidth]{met_t2micro.pdf}
-		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance.}
+		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Axes are logarithmic with base 2. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance.}
 		\label{fig:met_t2micro}
 	\end{figure}
 
@@ -108,6 +108,13 @@ All experiments are integrated for 200 time steps. No grid data is read or writt
 	\includegraphics[width=0.5\textwidth]{met_c44xlarge.pdf}
 	\caption{Time (in seconds) spent per process for the ROMS "medium" benchmark test (benchmark2.in), as function of the number of processes. Computations are performed on c4.4xlarge instances of AWS, which have 16 vCPUs per (virtual) node.}
 	\label{fig:met_c44xlarge}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{met_c48xlarge.pdf}
+	\caption{Time (in seconds) spent per process for the ROMS "large" benchmark test (benchmark3.in), as function of the number of processes. Computations are performed on c4.8xlarge instances of AWS, which have 32 vCPUs per node.}
+	\label{fig:met_c48xlarge}
 \end{figure}
 
 \subsection{Computational and monetary costs of a realistic study}
