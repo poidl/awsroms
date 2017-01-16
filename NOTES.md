@@ -73,7 +73,7 @@ for i in "${!ntilei[@]}"; do sed -i s/"NtileJ == .*"/"NtileJ == ${ntilej[$i]}"/g
 for i in $dirs; do sed -i s/"VARNAME = .*"/"VARNAME = \.\.\/\.\.\/\.\.\/roms\/ROMS\/External\/varinfo.dat"/g experiments/exp$i/ocean_benchmark2.in; done
 ```
 
-# "benchmark3.in" runs on c4.8xlarge2
+# "benchmark3.in" runs on c4.8xlarge
 
 exp028: 16x2 = 32
 exp029: 32x2 = 64 
