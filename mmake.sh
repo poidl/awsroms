@@ -1,7 +1,7 @@
 #!/bin/bash
 
-BEGIN=7
-END=12
+BEGIN=28
+END=33
 
 EXPPATH=./experiments
 

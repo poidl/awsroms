@@ -72,9 +72,22 @@
 \begin{document}
 	\setlength{\parindent}{0cm}
 	\maketitle
+	
+\section{Introduction}
+
+The Regional Ocean Modeling System \citep[ROMS, see ][]{shchepetkin2005regional} provides three benchmark tests, consisting of 
+an idealized model of the Southern Ocean with three grid sizes:
+
+\begin{itemize}
+	\item \verb|benchmark1|:   512 x 64 x 30 grid points
+	\item \verb|benchmark2|:   1024 x 128 x 30 grid points
+	\item \verb|benchmark3|:   2048 x 256 x 30 grid points
+\end{itemize}
+
+All experiments are integrated for 200 time steps. No grid data is read or written from/to the hard disk.
 
 \section{Preliminary results}
-	All results shown were produced with ROMS \citep{shchepetkin2005regional}, compiled with Open MPI using gfortran.
+	All results shown were produced with ROMS compiled with Open MPI using gfortran.
 	
 	\begin{figure}[H]
 		\centering
@@ -123,15 +136,16 @@ which are coupled by the open-source Coupled Ocean-Atmosphere-Wave-Sediment (COA
 	\item Huntington Beach (mid-shelf to surfzone): $\Delta=10\,\rm m$, area $6\times6\,\rm km^2$ ($600\times600\times20$ grid points)
 \end{itemize}
 
-As boundary conditions (forcing fields) they use
+ As boundary conditions (forcing fields) they use\footnote{\cite{kumar2015midshelf} provide an overview of their model set up, but understandably don't provide full detail. Our presentation may be inaccurate.}
 
 \begin{itemize}
-	\item Lateral: The parent grid L0 is forced with a combination of lateral boundary conditions from an assimilated global oceanic dataset \citep{carton2008reanalysis}. In addition, barotropic tidal elevation and velocities are projected onto the boundaries of L1.
+	\item Lateral forcing: The parent grid L0 is forced with a combination of lateral boundary conditions from an assimilated global oceanic dataset \citep{carton2008reanalysis}. Freshwater flux from river runoff is included. In addition, barotropic tidal elevation and velocities are projected onto the boundaries of L1.
 	
-	\item Surface forcing (wind-stress, heat, radiative and freshwater) is provided by a doubly nested WRF model with $\Delta=18\,\rm km$ (for L0) and $\Delta=6\,\rm km$ (for L1, L2, L3), embedded within the NCEP North American Regional Reanalysis.
+	\item Surface forcing (wind-stress, heat, radiative and freshwater) is provided by a doubly nested WRF model with $\Delta=18\,\rm km$ (for L0) and $\Delta=6\,\rm km$ (for L1, L2, L3), embedded within the NCEP North American Regional Reanalysis. Surface temperature and salinity are relaxed to monthly averages from \cite{carton2008reanalysis}.
+	
 \end{itemize}
 
-The L0-L4 domains are one-way nested. Daily L0 solutions are used as a lateral boundary condition for L1. L1 (L2) solutions are used as L2 (L3) lateral boundary conditions every $2\,\rm h$.
+The L0-L5 domains are one-way nested, i.e. L0-L4 each provide boundary condition data for their respective child grid. Daily L0 solutions are used as a lateral boundary condition for L1. L1 (L2) solutions are used as L2 (L3) lateral boundary conditions every $2\,\rm h$. Note again that L1's boundary condition includes barotropic tidal elevation and velocities in addition to information provided by its parent.
 
 The model is spun up for $15\,\rm yr$ with climatological surface forcing.
 
@@ -152,7 +166,7 @@ For time-stepping the shelf grids, \cite{kumar2015midshelf} state that
 \Delta t_{b}\leq\Delta x/c \qquad c=\sqrt{gH},
 \end{equation}
 
-where $\Delta t_b$ ($\Delta x$) is the barotropic time step (lateral grid spacing), and $g$ is gravity. Assuming that the baroclinic time step $\Delta t$ is a factor of 10-20 longer than the barotropic time step, this yields $\Delta t=\mathcal{O}(100\,\rm s)$ (L0, L1) and $\Delta t= \mathcal{O}(10\,\rm s)$ (L2, L3), respectively. For a $15\,\rm yr$ simulation, $N=\mathcal{O}(10^7)$ time steps are required. Clearly, these estimates are very rough. For example, to account for the shallower depth of the L2 and L3 grids,  one may assume a depth decrease by a factor of 10, and accordingly increase $\Delta t_b$ by a factor of 3 for L2 and L3. 
+where $\Delta t_b$ ($\Delta x$) is the barotropic time step (lateral grid spacing), and $g$ is standard gravity. Assuming that the baroclinic time step $\Delta t$ is a factor of 10-20 longer than the barotropic time step, this yields $\Delta t=\mathcal{O}(100\,\rm s)$ (L0, L1) and $\Delta t= \mathcal{O}(10\,\rm s)$ (L2, L3), respectively. For a $15\,\rm yr$ simulation, $N=\mathcal{O}(10^7)$ baroclinic time steps are required. Clearly, these estimates are very rough. For example, to account for the shallower depth of the L2 and L3 grids,  one may assume a depth decrease by a factor of 10, and accordingly increase $\Delta t_b$ by a factor of 3 for L2 and L3. 
 
 So far, no results are available measuring execution time for grids of similar size as L0-L3. The closest matching available result is for \verb|benchmark2|, with a grid size of $1024$x$128$x$30$ data points, which is roughly 1/10 of the number of spatial data points in L0-L3. Note that it is always possible to assume identical physical dimensions of the grid spacing (including the temporal lattice) between \verb|benchmark2| and L0-L3, since the benchmarking results are independent on physical dimensions (but depend only on the amount of data points).
 
