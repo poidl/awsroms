@@ -76,12 +76,15 @@ z = list(zip(ntilei, myx, ntilej))
 labels = [''.join(str(x) for x in z[jj]) for jj in range(STOP - START + 1)]
 print(labels)
 
+ideal = met[0] / (nproc / 32)
+
 fig = plt.figure(figsize=(7, 6))
 ax = fig.add_subplot(111)
 ax.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%d'))
 # ax.plot(nproc, met)
 for i, j in zip(nproc, met):
     ax.plot(i, j, 'x', markersize=15, markeredgewidth=3)
+ax.plot(nproc, ideal)
 ax.legend(labels, numpoints=1, fontsize=10)
 ax.text(-0.12, 1.02, str(FIGNO) + ')', fontsize=15, transform=ax.transAxes)
 plt.xticks(nproc)
