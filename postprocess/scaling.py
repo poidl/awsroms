@@ -23,12 +23,19 @@ import matplotlib.pyplot as plt
 # infile = "ocean_benchmark1.in"
 # ylim = (40, 180)
 
-START = 13
-STOP = 27
-FIGNO = 3
-FIGNAME = '../doc/figures/met_c44xlarge.svg'
-infile = "ocean_benchmark2.in"
-ylim = (0, 900)
+# START = 13
+# STOP = 27
+# FIGNO = 3
+# FIGNAME = '../doc/figures/met_c44xlarge.svg'
+# infile = "ocean_benchmark2.in"
+# ylim = (0, 900)
+
+START = 28
+STOP = 33
+FIGNO = 4
+FIGNAME = '../doc/figures/met_c48xlarge.svg'
+infile = "ocean_benchmark3.in"
+ylim = (0, 300)
 
 # mean elapsed time
 met = np.zeros(STOP - START + 1)
@@ -56,7 +63,7 @@ for ii in range(START, STOP + 1):
     os.system(cmdstr % (ii))
     ntilej[jj - 1] = readarray('.tmp')
 
-    cmdstr = '''grep "Node   #" ../experiments/exp%03d/out/exp%03d.o* |awk \'{print $5}\' >./.tmp'''
+    cmdstr = '''grep "Node   #" ../experiments/exp%03d/out/exp%03d.o* |awk \'{print $NF}\' >./.tmp'''
     # print(cmdstr % (ii, ii))
     os.system(cmdstr % (ii, ii))
     a = readarray('.tmp')
