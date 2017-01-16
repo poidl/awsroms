@@ -5,6 +5,7 @@
 
 ## TODO
 
+* Try MVAPICH2-Virt 2.2rc1 Package: http://mvapich.cse.ohio-state.edu/downloads/ Looks like this is optimized for our use case.
 * T2 may be faster than C4 for a SHORT TIME due to "burstable performance". Pin that down in the experiments and interpretation.
 * mkdir exp*/nc/out
 
