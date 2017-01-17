@@ -75,6 +75,8 @@
 	
 \section{Introduction}
 
+\subsection{Test suite}
+
 The Regional Ocean Modeling System \citep[ROMS, see ][]{shchepetkin2005regional} provides three benchmark tests, consisting of 
 an idealized model of the Southern Ocean with three grid sizes:
 
@@ -86,34 +88,59 @@ an idealized model of the Southern Ocean with three grid sizes:
 
 All experiments are integrated for 200 time steps. No grid data is read or written from/to the hard disk.
 
-\section{Preliminary results}
-	All results shown were produced with ROMS compiled with Open MPI using gfortran.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.5\textwidth]{met_t2micro.pdf}
-		\caption{Time (in seconds) spent per process for the ROMS "small" benchmark test (benchmark1.in), as function of the number of processes. Axes are logarithmic with base 2. Computations are performed on t2.micro instances of AWS, which have one vCPU per (virtual) node (2016/11/01). Each data point shows the average over all processes, measured from one single experiment. The inset shows the domain partition (tiling) of the 512x64(x30) point domain. The result suggests that partitioning along the first dimension yields better performance.}
-		\label{fig:met_t2micro}
-	\end{figure}
+\subsection{Hardware}
 
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.5\textwidth]{met_c4large.pdf}
-	\caption{Same as Fig. \ref{fig:met_t2micro}, but computations are performed on c4.large instances of AWS, which have 2 vCPUs per (virtual) node. In the case of c4 instances, a vCPU is defined as a single thread of a custom 2.9 GHz Intel Xeon E5-2666 v3 (Haswell) processor (2016/11/01).}
-	\label{fig:met_c4large}
-\end{figure}
+\defcitealias{web:ec2_instancetypes}{AWS, \citeyear{web:ec2_instancetypes}}
+
+Computations are performed on "C4 instances" of Amazon Web Services, which is described as "featuring the highest performing processors and lowest price/compute performance" in their product range \citepalias{web:ec2_instancetypes}. These instances feature custom Intel Xeon E5-2666 v3 (Haswell) processors.
+
+For C4 instances, AWS defines a "vCPU" as a hyperthread of the Intel Xeon processor \citepalias{web:ec2_instancetypes}. Note that a stock Xeon E5-2666 v3 has 10 cores and 2 threads per core \citep{web:intelXeon}, but that AWS uses a "custom" version.
+
+The two largest C4 instance types are "c4.4xlarge" and  "c4.8xlarge", which differ in the number of vCPUs and the amount of memory:
+
+\begin{center}
+\begin{tabular}{ c c c }
+ Instance type & vCPUs & Memory \\
+ \hline
+	c4.4xlarge & 16 & 30 GiB \\
+	c4.8xlarge & 36 & 60 GiB\\
+\end{tabular}
+\end{center}
+
+
+\subsection{Software}
+
+For hardware and software provisioning, we use the \verb|CfnCluster| tool provided by AWS \citep{web:awscfncluster}. The tool provides a range of virtual-machine images, which are pre-configured for cluster computing on AWS' hardware. Pre-installed packages include MPI libraries and schedulers. For the experiments described below, it was necessary to manually install the NetCDF Fortran libraries as a dependency for ROMS (although no NetCDF I/O is performed in the experiments).
+All results shown were produced with ROMS compiled with Open MPI using the GNU Fortran compiler (GFortran).
+
+\begin{center}
+	\begin{tabular}{ l l }
+		Operating system: & CentOS Linux release 7.2.1511 \\
+		Linux kernel: & v3.10.0 x86\_64 \\
+		Fortran compiler: & gcc-gfortran 4.8.5 \\
+		MPI library: &  openmpi 1.10.0 \\
+	\end{tabular}
+\end{center}
+
+
+\section{Preliminary results}
+
+
+Fig. \ref{fig:met_c44xlarge} shows execution time for \verb|benchmark2| for various tiling configurations on a single c4.4xlarge instanc (16	vCPUs, 30 GiB memory).  The cause for the increase in execution time from the 1-core experiment to the 2-core experiments is unclear to us. For the remaining experiments, the data shows the expected scaling. Note that multi-threading is achieved by using the MPI library, but that computations are performed on a single node, such that no influence of networking bandwidth or latency is expected.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\textwidth]{met_c44xlarge.pdf}
-	\caption{Time (in seconds) spent per process for the ROMS "medium" benchmark test (benchmark2.in), as function of the number of processes. Computations are performed on c4.4xlarge instances of AWS, which have 16 vCPUs per (virtual) node.}
+	\caption{Time (in seconds) spent per process for the ROMS "medium" benchmark test (benchmark2.in), as function of the number of processes. The inset shows the tiling. Axes are logarithmic with base 2, dashed lines show slopes of "ideal" scaling functions with varying offset. Computations are performed on a c4.4xlarge instance, which has 16 vCPUs per (virtual) node.}
 	\label{fig:met_c44xlarge}
 \end{figure}
+
+We use only 32 vCPUs of the c4.8xlarge to avoid potential problems with some Linux operating systems which have a vCPU limit of 32 \citep{web:ec2_c4}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\textwidth]{met_c48xlarge.pdf}
-	\caption{Time (in seconds) spent per process for the ROMS "large" benchmark test (benchmark3.in), as function of the number of processes. Computations are performed on c4.8xlarge instances of AWS, which have 32 vCPUs per node.}
+	\caption{Time (in seconds) spent per process for the ROMS "large" benchmark test (benchmark3.in), as function of the number of processes.  Axes are logarithmic with base 2. Computations are performed on c4.8xlarge instances of AWS, which have 36 vCPUs per node.}
 	\label{fig:met_c48xlarge}
 \end{figure}
 
@@ -181,7 +208,7 @@ So far, no results are available measuring execution time for grids of similar s
 \subsubsection{Monetary cost}
 
 Hence, in the following we may assume $\Delta t$ and $\Delta x$ is similar for \verb|benchmark2| and L0-L3, keeping in mind that the amount of processed data is an order of magnitude less than for each of the 4 experiments L0-L3.
-Fig. \ref{fig:met_c44xlarge} shows that \verb|benchmark2| takes roughly $100\,\rm s$ to complete on a 16-core \verb|c4_4xlarge| instance using the gfortran compiler. The number of time steps integrated in  \verb|benchmark2| is 200, i.e. about 2 time steps per second are processed. It follows that a $15\,\rm yr$ spin up time for \verb|benchmark2| takes roughly $\mathcal{O}(60\,\rm d)$ to complete.
+Fig. \ref{fig:met_c44xlarge} shows that \verb|benchmark2| takes roughly $100\,\rm s$ to complete on a 16-core \verb|c4_4xlarge| instance using the GFortran compiler. The number of time steps integrated in  \verb|benchmark2| is 200, i.e. about 2 time steps per second are processed. It follows that a $15\,\rm yr$ spin up time for \verb|benchmark2| takes roughly $\mathcal{O}(60\,\rm d)$ to complete.
 
 The instance type \verb|c4_4xlarge| is currently (2017/01/12) priced at \textdollar 0.796 per hour for on-demand use, resulting in a total of $\mathcal{O}($\textdollar $1,000) $ for a 2 month lease.
 
