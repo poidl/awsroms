@@ -135,7 +135,8 @@ Fig. \ref{fig:met_c44xlarge} shows execution time for \verb|benchmark2| for vari
 	\label{fig:met_c44xlarge}
 \end{figure}
 
-We use only 32 vCPUs of the c4.8xlarge to avoid potential problems with some Linux operating systems which have a vCPU limit of 32 \citep{web:ec2_c4}.
+Fig. \ref{fig:met_c48xlarge} shows that \verb|benchmark3| has an execution time of roughly $230\,\rm s$ on 32-cores of a \verb|c4_8xlarge| instance using the GFortran compiler. The number of time steps integrated in  \verb|benchmark3| is 200, i.e. on time step is processed every $1.15\,\rm s $. Note that we use only 32 vCPUs of the c4.8xlarge to avoid potential problems with some Linux operating systems which have a vCPU limit of 32 \citep{web:ec2_c4}. 
+Fig. \ref{fig:met_c48xlarge} shows the overhead induced by distributing the computation amongst various nodes. The networking configuration used in the experiment was the default configuration provided by \verb|CfnCluster|. In particular, we \emph{did not} verify whether the modifications described by \cite{web:cyclempi} \citep[see also][]{web:ibmMpiTrick} have been applied before the experiment was conducted. We hypothesize that any improvements gained by optimizing the infrastructure beyond the configuration provided by \verb|CfnCluster| will likely not decrease execution time by an order of magnitude. We assume that if this was the case, such an optimization would be adopted by \verb|CfnCluster|, or at least be described in their documentation.
 
 \begin{figure}[H]
 	\centering
@@ -194,30 +195,45 @@ For time-stepping the shelf grids, \cite{kumar2015midshelf} state that
 
 \subsubsection{Computational cost}
 
-\cite{kumar2015midshelf} do not report the time step used in their L0-L3 models. Assuming an ocean depth of $H=2000\,\rm m$, the barotropic time step is constrained by the CFL condition to roughly $\mathcal{O}(10\,\rm s)$ for L0 and L1, and $\mathcal{O}(1\,\rm s)$ for L2 and L3, according to the simplified formula (which does not hold strictly in this practical application)
+\cite{kumar2015midshelf} do not report the time step used in their L0-L3 models. Assuming an ocean depth of $H=2000\,\rm m$, the barotropic time step $\Delta t_{bt}$ is constrained by the CFL condition to roughly $\mathcal{O}(10\,\rm s)$ for L0 and L1, and $\mathcal{O}(1\,\rm s)$ for L2 and L3, according to the simplified formula (which does not hold strictly in this practical application)
 
-\begin{equation}
-\Delta t_{b}\leq\Delta x/c \qquad c=\sqrt{gH},
+\begin{equation}\label{eq:cfl}
+\Delta t_{bt}\leq\Delta x/c \qquad c=\sqrt{gH},
 \end{equation}
 
-where $\Delta t_b$ ($\Delta x$) is the barotropic time step (lateral grid spacing), and $g$ is standard gravity. Assuming that the baroclinic time step $\Delta t$ is a factor of 10-20 longer than the barotropic time step, this yields $\Delta t=\mathcal{O}(100\,\rm s)$ (L0, L1) and $\Delta t= \mathcal{O}(10\,\rm s)$ (L2, L3), respectively. For a $15\,\rm yr$ simulation, $N=\mathcal{O}(10^7)$ baroclinic time steps are required. Clearly, these estimates are very rough. For example, to account for the shallower depth of the L2 and L3 grids,  one may assume a depth decrease by a factor of 10, and accordingly increase $\Delta t_b$ by a factor of 3 for L2 and L3. 
+where $\Delta t_{bt}$ ($\Delta x$) is the barotropic time step (lateral grid spacing), and $g$ is standard gravity (Tab. \ref{tab:timesteps}). 
 
-So far, no results are available measuring execution time for grids of similar size as L0-L3. The closest matching available result is for \verb|benchmark2|, with a grid size of $1024$x$128$x$30$ data points, which is roughly 1/10 of the number of spatial data points in L0-L3. Note that it is always possible to assume identical physical dimensions of the grid spacing (including the temporal lattice) between \verb|benchmark2| and L0-L3, since the benchmarking results are independent on physical dimensions (but depend only on the amount of data points).
+\begin {table}[H]
+\begin{center}
+	\begin{tabular}{ l | r | r | r| r }
+		           $\Delta x$     & $5\,\rm km$ & $1\,\rm km$ & $250\,\rm m$ & $75\,\rm m$\\
+		 $\Delta t_{bt}$       &  $36\,\rm s$ & $7\,\rm s$   &$1.8\,\rm s$       &  $0.5\,\rm s$\\
+		 $\Delta t$       &  $535\,\rm s$ & $107\,\rm s$   &$27\,\rm s$       &  $8\,\rm s$ \\
+		 $N (10^6)$                  &  $0.9$ & $4.4$   &$18$       &  $59$
+	\end{tabular}
 
+\end{center}\caption{Barotropic ($\Delta t_{bt}$) and baroclinic ($\Delta t$) time steps for various grid resolutions ($\Delta x$), assuming validity of Eq. \eqref{eq:cfl}, a depth of $H=2000\,\rm m$,  and  $\Delta t/\Delta t_{bt}=15$. $N$ is the number of timesteps required for a $15\,\rm y$ model simulation (divided by $10^6$), the last column lists the total run time of a $15\,\rm y$ simulation.}\label{tab:timesteps}
+\end{table}
+
+Assuming that the baroclinic time step $\Delta t$ is a factor of 10-20 longer than the barotropic time step, this yields $\Delta t=\mathcal{O}(100\,\rm s)$ (L0, L1) and $\Delta t= \mathcal{O}(10\,\rm s)$ (L2, L3), respectively. For a $15\,\rm yr$ simulation, $N=\mathcal{O}(10^6)$ ($N=\mathcal{O}(10^7)$) baroclinic time steps are required for L0, L1 (L2, L3). Clearly, these estimates are very rough. For example, to account for the shallower depth of the L2 and L3 grids,  one may assume a depth decrease by a factor of 10, and accordingly increase $\Delta t_{bt}$ by a factor of 3 for L2 and L3. 
+
+So far, no results are available measuring execution time for grids of similar size as L0-L3. The closest match is \verb|benchmark3|, with a grid size of $2048$ x $256$ x $30$ data points, which is roughly 80\% (15\%) of the number of spatial data points in L0 (L2). Note that it is always possible to assume identical physical dimensions of the grid spacing (including the temporal lattice) between \verb|benchmark3| and L0-L3, since the benchmarking results are independent on physical dimensions (but depend only on the amount of data points).
+
+Our results showed that in \verb|benchmark3|, the processing time for one time step is about $1.15\,\rm s$ seconds using 32 cores of a single \verb|c4_8xlarge| instance. It follows that a $15\,\rm yr$ spin up time for \verb|benchmark3|  (assumed to consist of $10^6$-$10^7$ baroclinic time steps of lenghts displayed in Tab. \ref{tab:timesteps}) takes a minimum of $\mathcal{O}(10\,\rm d)$ to complete.
 
 \subsubsection{Monetary cost}
 
-Hence, in the following we may assume $\Delta t$ and $\Delta x$ is similar for \verb|benchmark2| and L0-L3, keeping in mind that the amount of processed data is an order of magnitude less than for each of the 4 experiments L0-L3.
-Fig. \ref{fig:met_c44xlarge} shows that \verb|benchmark2| takes roughly $100\,\rm s$ to complete on a 16-core \verb|c4_4xlarge| instance using the GFortran compiler. The number of time steps integrated in  \verb|benchmark2| is 200, i.e. about 2 time steps per second are processed. It follows that a $15\,\rm yr$ spin up time for \verb|benchmark2| takes roughly $\mathcal{O}(60\,\rm d)$ to complete.
+The instance type \verb|c4_8xlarge| is currently (2017/01/12) priced at \textdollar 1.591 (2.085) per Hour for on-demand use in US East (Asia Pacific, Sydney) region, resulting in a total of roughly $\mathcal{O}(\text{USD } 500)$ for a 10 day lease.
 
-The instance type \verb|c4_4xlarge| is currently (2017/01/12) priced at \textdollar 0.796 per hour for on-demand use, resulting in a total of $\mathcal{O}($\textdollar $1,000) $ for a 2 month lease.
 
+
+\subsection{Conclusion}
+
+Given that high-resolution, state-of-the-art regional and coastal numerical studies such as  \cite{kumar2015midshelf} are conducted on multiple different large grids (some of which require an extensive spin-up phase) we estimate that the total monetary cost of cloud-computing infrastructure will typically be on the order of $\mathcal{O}(\text{USD } 10,000)$ to $\mathcal{O}(\text{USD } 100,000)$. Note that this estimate refers to the final experiment(s) whose results are published. Importantly, it \emph{does not} include the testing phase, which may well increase the total cost of the study by a factor of 10 or more. 
 
 \subsection{TODO}
 
-\begin{itemize}
-	\item Relate monetary cost of computations to cost of labor?
-\end{itemize}
+Compare it to cost of acquiring and operating computers.
 
 	
 \bibliography{main.bib}

@@ -24,10 +24,10 @@
 <div class="maketitle">
 <h2 class="titleHead">Notes on running ROMS on Amazon Web Services (DRAFT)</h2>
 <div class="author"><span class="cmss-12x-x-120">Stefan Riha</span><span class="thank-mark"><a href="#tk-1"><span class="cmsy-10x-x-144">∗</span></a></span></div><br/>
-<div class="date"><span class="cmss-12x-x-120">January 17, 2017</span></div>
+<div class="date"><span class="cmss-12x-x-120">January 23, 2017</span></div>
 <div class="thanks"><br/><a id="tk-1"></a><span class="thank-mark"><span class="cmsy-10x-x-120">∗</span></span>Email: stefan@sriha.net</div></div>
 <a id="x1-2r1"></a>
-<ol><a id="mycontents"></a><li><a href="#x1-10001">Introduction</a></li><li><a href="#x1-50002">Preliminary results</a></li><li><a href="#x1-110002">References</a></li></ol><h3 class="sectionHead"><span class="titlemark">1   </span> <a id="x1-10001"></a>Introduction</h3>
+<ol><a id="mycontents"></a><li><a href="#x1-10001">Introduction</a></li><li><a href="#x1-50002">Preliminary results</a></li><li><a href="#x1-120003">References</a></li></ol><h3 class="sectionHead"><span class="titlemark">1   </span> <a id="x1-10001"></a>Introduction</h3>
 <a id="x1-1001r1"></a>
 <h4 class="subsectionHead"><span class="titlemark">1.1   </span> <a id="x1-20001"></a>Test suite</h4>
 <!--l. 79--><p class="noindent">The Regional Ocean Modeling System (ROMS, see  <a href="#Xshchepetkin2005regional">Shchepetkin and McWilliams</a>, <a href="#Xshchepetkin2005regional">2005</a>) provides
@@ -98,19 +98,32 @@ expected.
 with base 2, dashed lines show slopes of ”ideal” scaling functions with varying oﬀset. Computations are
 performed on a c4.4xlarge instance, which has 16 vCPUs per (virtual) node.</span></div><!--tex4ht:label?: x1-5001r1 -->
 </div><hr class="endfigure"/>
-<!--l. 137--><p class="noindent">We use only 32 vCPUs of the c4.8xlarge to avoid potential problems with some Linux operating systems which
-have a vCPU limit of 32 (<a href="#Xweb:ec2_c4">Amazon Web Services</a>, <a href="#Xweb:ec2_c4">2016b</a>).
+<!--l. 137--><p class="noindent">Fig. <a href="#x1-5002r2">2<!--tex4ht:ref: fig:met_c48xlarge --></a> shows that <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span> has an execution time of roughly
+<!--l. 137--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>3</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
+on 32-cores of a <span class="obeylines-h"><span class="verb"><span class="cmtt-12">c4_8xlarge</span></span></span> instance using the GFortran compiler. The number of
+time steps integrated in <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span> is 200, i.e. on time step is processed every
+<!--l. 137--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo class="MathClass-punc">.</mo><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>.
+Note that we use only 32 vCPUs of the c4.8xlarge to avoid potential problems with some Linux
+operating systems which have a vCPU limit of 32 (<a href="#Xweb:ec2_c4">Amazon Web Services</a>, <a href="#Xweb:ec2_c4">2016b</a>). Fig. <a href="#x1-5002r2">2<!--tex4ht:ref: fig:met_c48xlarge --></a> shows
+the overhead induced by distributing the computation amongst various nodes. The networking
+conﬁguration used in the experiment was the default conﬁguration provided by <span class="obeylines-h"><span class="verb"><span class="cmtt-12">CfnCluster</span></span></span>. In
+particular, we <span class="cmssi-12">did not </span>verify whether the modiﬁcations described by <a href="#Xweb:cyclempi">Howard</a> (<a href="#Xweb:cyclempi">2015</a>) (see also <a href="#Xweb:ibmMpiTrick">IBM
+Corporation</a>, <a href="#Xweb:ibmMpiTrick">2010</a>) have been applied before the experiment was conducted. We hypothesize that any
+improvements gained by optimizing the infrastructure beyond the conﬁguration provided by <span class="obeylines-h"><span class="verb"><span class="cmtt-12">CfnCluster</span></span></span>
+will likely not decrease execution time by an order of magnitude. We assume that if this was the
+case, such an optimization would be adopted by <span class="obeylines-h"><span class="verb"><span class="cmtt-12">CfnCluster</span></span></span>, or at least be described in their
+documentation.
 </p>
 <hr class="figure"/><div class="figure">
 <a id="x1-5002r2"></a>
-<!--l. 141--><p class="noindent" style="text-align:center"><img alt="PIC" src="./figures/met_c48xlarge.svg" style="width: 71%; max-width: 800px;"/>
+<!--l. 142--><p class="noindent" style="text-align:center"><img alt="PIC" src="./figures/met_c48xlarge.svg" style="width: 71%; max-width: 800px;"/>
 <br/> </p><div class="caption"><span class="id">Figure 2: </span><span class="content">Time (in seconds) spent per process for the ROMS ”large” benchmark test (benchmark3.in),
 as function of the number of processes. Axes are logarithmic with base 2. Computations are performed
 on c4.8xlarge instances of AWS, which have 36 vCPUs per node.</span></div><!--tex4ht:label?: x1-5002r2 -->
 </div><hr class="endfigure"/>
 <a id="x1-5003r4"></a>
 <h4 class="subsectionHead"><span class="titlemark">2.1   </span> <a id="x1-60001"></a>Computational and monetary costs of a realistic study</h4>
-<!--l. 148--><p class="noindent">The preliminary test above allow a rough estimate of the computational and monetary costs involved in a
+<!--l. 149--><p class="noindent">The preliminary test above allow a rough estimate of the computational and monetary costs involved in a
 realistic study. By monetary cost we mean the ﬁnancial cost of renting AWS’ hardware to conduct a study of
 a given computational cost. As an example we consider <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>), who validate the
 midshelf and surfzone circulation generated by a numerical model against observations. They use a
@@ -124,7 +137,7 @@ feasibility.
 <a id="x1-6001r1"></a>
 </p>
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.1   </span> <a id="x1-70001"></a>Components of the numerical experiment</h5>
-<!--l. 152--><p class="noindent">The numerical experiment of <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) consists of the following components:
+<!--l. 153--><p class="noindent">The numerical experiment of <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) consists of the following components:
 </p>
 <ul class="itemize1">
 <li class="itemize">Wind forcing
@@ -134,7 +147,7 @@ feasibility.
 <li class="itemize">Tide forcing
       </li>
 <li class="itemize">Buoyancy forcing</li></ul>
-<!--l. 161--><p class="noindent">which are coupled by the open-source Coupled Ocean-Atmosphere-Wave-Sediment (COAWST) Transport
+<!--l. 162--><p class="noindent">which are coupled by the open-source Coupled Ocean-Atmosphere-Wave-Sediment (COAWST) Transport
 model (<a href="#Xwarner2008using">Warner et al.</a>, <a href="#Xwarner2008using">2008</a>; <a href="#Xweb:coawst">Woods Hole Coastal and Marine Science Center</a>, <a href="#Xweb:coawst">2016</a>), which couples an
 atmospheric (Weather Research and Forecasting model, WRF), wave (SWAN), three-dimensional circulation
 and stratiﬁcation (ROMS) and sediment transport models. COAWST is integrated by the Model Coupling
@@ -142,38 +155,38 @@ Toolkit (MCT, <a href="#Xweb:mct">UChicage Argonne</a> <a href="#Xweb:mct">2016
 nested grids:
 </p>
 <ul class="itemize1">
-<li class="itemize">U.S. West Coast and eastern Paciﬁc (L0): <!--l. 164--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
-      area <!--l. 164--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 164--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
+<li class="itemize">U.S. West Coast and eastern Paciﬁc (L0): <!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
+      area <!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
       grid points)
                                                                                                 
                                                                                                 
       </li>
-<li class="itemize">Southern California Bight (L1): <!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
-      area <!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 165--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
+<li class="itemize">Southern California Bight (L1): <!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>,
+      area <!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
       grid points)
       </li>
-<li class="itemize">Interior bight region (L2): <!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
-      area <!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 166--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>1</mn><mn>2</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
+<li class="itemize">Interior bight region (L2): <!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>1</mn><mn>2</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>0</mn></math>
       grid points)
       </li>
-<li class="itemize">San Pedro Bay (L3): <!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>7</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
-      area <!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 167--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>6</mn><mn>7</mn> <mo class="MathClass-bin">×</mo> <mn>9</mn><mn>3</mn><mn>4</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>2</mn></math>
+<li class="itemize">San Pedro Bay (L3): <!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>7</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>7</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>6</mn><mn>7</mn> <mo class="MathClass-bin">×</mo> <mn>9</mn><mn>3</mn><mn>4</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>2</mn></math>
       grid points)
       </li>
-<li class="itemize">Huntington Beach, Newport Beach (shelf break to inner shelf and surfzone): <!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
-      area <!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 168--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>1</mn><mn>4</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>2</mn><mn>8</mn> <mo class="MathClass-bin">×</mo> <mn>2</mn><mn>0</mn></math>
+<li class="itemize">Huntington Beach, Newport Beach (shelf break to inner shelf and surfzone): <!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn> <mo class="MathClass-bin">×</mo> <mn>3</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>1</mn><mn>4</mn> <mo class="MathClass-bin">×</mo> <mn>4</mn><mn>2</mn><mn>8</mn> <mo class="MathClass-bin">×</mo> <mn>2</mn><mn>0</mn></math>
       grid points)
       </li>
-<li class="itemize">Huntington Beach (mid-shelf to surfzone): <!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
-      area <!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
-      (<!--l. 169--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>2</mn><mn>0</mn></math>
+<li class="itemize">Huntington Beach (mid-shelf to surfzone): <!--l. 170--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+      area <!--l. 170--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><msup><mrow><mi>m</mi></mrow><mrow><mn>2</mn></mrow></msup></math>
+      (<!--l. 170--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>6</mn><mn>0</mn><mn>0</mn> <mo class="MathClass-bin">×</mo> <mn>2</mn><mn>0</mn></math>
       grid points)</li></ul>
-<!--l. 172--><p class="noindent">As boundary conditions (forcing ﬁelds) they use<span class="footnote-mark"><a href="main2.html#fn1x0"><sup class="textsuperscript">1</sup></a></span><a id="x1-7001f1"></a>
+<!--l. 173--><p class="noindent">As boundary conditions (forcing ﬁelds) they use<span class="footnote-mark"><a href="main2.html#fn1x0"><sup class="textsuperscript">1</sup></a></span><a id="x1-7001f1"></a>
 </p>
 <ul class="itemize1">
 <li class="itemize">Lateral forcing: The parent grid L0 is forced with a combination of lateral boundary conditions
@@ -182,88 +195,129 @@ nested grids:
       boundaries of L1.
       </li>
 <li class="itemize">Surface forcing (wind-stress, heat, radiative and freshwater) is provided by a doubly nested WRF
-      model with <!--l. 177--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>
-      (for L0) and <!--l. 177--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>6</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>
+      model with <!--l. 178--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>1</mn><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>
+      (for L0) and <!--l. 178--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi> <mo class="MathClass-rel">=</mo> <mn>6</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math>
                                                                                                 
                                                                                                 
       (for  L1,  L2,  L3),  embedded  within  the  NCEP  North  American  Regional  Reanalysis.  Surface
       temperature and salinity are relaxed to monthly averages from <a href="#Xcarton2008reanalysis">Carton and Giese</a> (<a href="#Xcarton2008reanalysis">2008</a>).
       </li></ul>
-<!--l. 181--><p class="noindent">The L0-L5 domains are one-way nested, i.e. L0-L4 each provide boundary condition data for their respective child grid.
+<!--l. 182--><p class="noindent">The L0-L5 domains are one-way nested, i.e. L0-L4 each provide boundary condition data for their respective child grid.
 Daily L0 solutions are used as a lateral boundary condition for L1. L1 (L2) solutions are used as L2 (L3) lateral boundary
-conditions every <!--l. 181--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mspace class="thinspace" width="0.3em"></mspace><mi>h</mi></math>.
+conditions every <!--l. 182--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mspace class="thinspace" width="0.3em"></mspace><mi>h</mi></math>.
 Note again that L1’s boundary condition includes barotropic tidal elevation and velocities in addition to
 information provided by its parent.
-</p><!--l. 183--><p class="noindent">The model is spun up for <!--l. 183--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math>
+</p><!--l. 184--><p class="noindent">The model is spun up for <!--l. 184--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math>
 with climatological surface forcing.
-</p><!--l. 186--><p class="noindent">For time-stepping the shelf grids, <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) state that
+</p><!--l. 187--><p class="noindent">For time-stepping the shelf grids, <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) state that
 </p>
 <ul class="itemize1">
-<li class="itemize">L4 and L5 are integrated for 92 days with a baroclininc time step of <!--l. 189--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
-      and <!--l. 189--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>,
+<li class="itemize">L4 and L5 are integrated for 92 days with a baroclininc time step of <!--l. 190--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
+      and <!--l. 190--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>,
       respectively.
       </li>
-<li class="itemize">wave action density in SWAN evolves with a time step of <!--l. 190--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>2</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
-      and <!--l. 190--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>,
+<li class="itemize">wave action density in SWAN evolves with a time step of <!--l. 191--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>2</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
+      and <!--l. 191--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>6</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>,
       respectively. Exchange of information between the circulation and wave models occurres every
-      <!--l. 190--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mn>6</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>.</li></ul>
+      <!--l. 191--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mn>6</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>.</li></ul>
 <a id="x1-7002r9"></a>
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.2   </span> <a id="x1-80002"></a>Computational cost</h5>
-<!--l. 196--><p class="noindent"><a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) do not report the time step used in their L0-L3 models. Assuming an ocean depth of
-<!--l. 196--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>H</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
-the barotropic time step is constrained by the CFL condition to roughly
-<!--l. 196--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> for L0 and
-L1, and <!--l. 196--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math>
+<!--l. 197--><p class="noindent"><a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>) do not report the time step used in their L0-L3 models. Assuming an ocean depth of
+<!--l. 197--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>H</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>, the barotropic time step
+<!--l. 197--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub></math> is constrained by the CFL
+condition to roughly <!--l. 197--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math>
+for L0 and L1, and <!--l. 197--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math>
 for L2 and L3, according to the simpliﬁed formula (which does not hold strictly in this practical
 application)
 </p>
 <table class="equation"><tr><td> <a id="x1-8001r1"></a>
-<!--l. 198--><math class="equation" display="block" xmlns="http://www.w3.org/1998/Math/MathML">
-<mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi></mrow></msub> <mo class="MathClass-rel">≤</mo> <mi>Δ</mi><mi>x</mi><mo class="MathClass-bin">∕</mo><mi>c</mi><mspace class="qquad" width="2em"></mspace><mi>c</mi> <mo class="MathClass-rel">=</mo> <msqrt><mrow><mi>g</mi><mi>H</mi></mrow></msqrt><mo class="MathClass-punc">,</mo>
+<!--l. 199--><math class="equation" display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub> <mo class="MathClass-rel">≤</mo> <mi>Δ</mi><mi>x</mi><mo class="MathClass-bin">∕</mo><mi>c</mi><mspace class="qquad" width="2em"></mspace><mi>c</mi> <mo class="MathClass-rel">=</mo> <msqrt><mrow><mi>g</mi><mi>H</mi></mrow></msqrt><mo class="MathClass-punc">,</mo>
 </math></td><td class="eq-no">(1)</td></tr></table>
-<!--l. 202--><p class="noindent">where <!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi></mrow></msub></math>
-(<!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>x</mi></math>) is the barotropic time step
-(lateral grid spacing), and <!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>
-is standard gravity. Assuming that the baroclinic time step
-<!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi></math>
+<!--l. 203--><p class="noindent">where <!--l. 203--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub></math>
+(<!--l. 203--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>x</mi></math>) is the barotropic time step
+(lateral grid spacing), and <!--l. 203--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>
+is standard gravity (Tab. <a href="#x1-8002r1">1<!--tex4ht:ref: tab:timesteps --></a>).
+</p>
+<div class="table">
+<!--l. 205--><p class="noindent"><a id="x1-8002r1"></a></p><hr class="float"/><div class="float">
+<div class="center">
+<!--l. 206--><p class="noindent">
+</p>
+<div class="tabular"> <table cellpadding="0" cellspacing="0" class="tabular" id="TBL-4" rules="groups"><colgroup id="TBL-4-1g"><col id="TBL-4-1"></col></colgroup><colgroup id="TBL-4-2g"><col id="TBL-4-2"></col></colgroup><colgroup id="TBL-4-3g"><col id="TBL-4-3"></col></colgroup><colgroup id="TBL-4-4g"><col id="TBL-4-4"></col></colgroup><colgroup id="TBL-4-5g"><col id="TBL-4-5"></col></colgroup><tr id="TBL-4-1-" style="vertical-align:baseline;"><td class="td11" id="TBL-4-1-1" style="text-align:left; white-space:nowrap;"><!--l. 208--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>x</mi></math></td><td class="td11" id="TBL-4-1-2" style="text-align:right; white-space:nowrap;"><!--l. 208--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math></td><td class="td11" id="TBL-4-1-3" style="text-align:right; white-space:nowrap;"><!--l. 208--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mspace class="thinspace" width="0.3em"></mspace><mi>k</mi><mi>m</mi></math></td><td class="td11" id="TBL-4-1-4" style="text-align:right; white-space:nowrap;"><!--l. 208--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>5</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math></td><td class="td11" id="TBL-4-1-5" style="text-align:right; white-space:nowrap;"><!--l. 208--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>7</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math></td></tr><tr id="TBL-4-2-" style="vertical-align:baseline;"><td class="td11" id="TBL-4-2-1" style="text-align:left; white-space:nowrap;"><!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow>
+<mi>b</mi><mi>t</mi></mrow></msub></math> </td><td class="td11" id="TBL-4-2-2" style="text-align:right; white-space:nowrap;"><!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mn>6</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-2-3" style="text-align:right; white-space:nowrap;"><!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>7</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-2-4" style="text-align:right; white-space:nowrap;"><!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo class="MathClass-punc">.</mo><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-2-5" style="text-align:right; white-space:nowrap;"><!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo class="MathClass-punc">.</mo><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td>
+</tr><tr id="TBL-4-3-" style="vertical-align:baseline;"><td class="td11" id="TBL-4-3-1" style="text-align:left; white-space:nowrap;"><!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi></math> </td><td class="td11" id="TBL-4-3-2" style="text-align:right; white-space:nowrap;"><!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mn>3</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-3-3" style="text-align:right; white-space:nowrap;"><!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>7</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-3-4" style="text-align:right; white-space:nowrap;"><!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>7</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td><td class="td11" id="TBL-4-3-5" style="text-align:right; white-space:nowrap;"><!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>8</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math></td>
+</tr><tr id="TBL-4-4-" style="vertical-align:baseline;"><td class="td11" id="TBL-4-4-1" style="text-align:left; white-space:nowrap;"><!--l. 211--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>6</mn></mrow></msup></mrow><mo class="MathClass-close">)</mo></mrow></math> </td><td class="td11" id="TBL-4-4-2" style="text-align:right; white-space:nowrap;"><!--l. 211--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo class="MathClass-punc">.</mo><mn>9</mn></math></td><td class="td11" id="TBL-4-4-3" style="text-align:right; white-space:nowrap;"><!--l. 211--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>4</mn><mo class="MathClass-punc">.</mo><mn>4</mn></math></td><td class="td11" id="TBL-4-4-4" style="text-align:right; white-space:nowrap;"><!--l. 211--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>8</mn></math></td><td class="td11" id="TBL-4-4-5" style="text-align:right; white-space:nowrap;"><!--l. 211--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>5</mn><mn>9</mn></math></td>
+</tr></table>
+</div>
+</div>
+<br/> <div class="caption"><span class="id">Table 1: </span><span class="content">Barotropic (<!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub></math>)
+and baroclinic (<!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi></math>)
+time steps for various grid resolutions (<!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>x</mi></math>),
+assuming validity of Eq. (<a href="#x1-8001r1">1<!--tex4ht:ref: eq:cfl --></a>), a depth of <!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>H</mi> <mo class="MathClass-rel">=</mo> <mn>2</mn><mn>0</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>m</mi></math>,
+and <!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi><mo class="MathClass-bin">∕</mo><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub> <mo class="MathClass-rel">=</mo> <mn>1</mn><mn>5</mn></math>.
+<!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math>
+is the number of timesteps required for a <!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi></math>
+model simulation (divided by <!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>6</mn></mrow></msup></math>),
+the last column lists the total run time of a <!--l. 214--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi></math>
+simulation.</span></div><!--tex4ht:label?: x1-8002r1 -->
+</div><hr class="endfloat"/>
+</div>
+<!--l. 217--><p class="noindent">Assuming that the baroclinic time step <!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi></math>
 is a factor of 10-20 longer than the barotropic time step, this yields
-<!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> (L0, L1) and
-<!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> (L2, L3),
-respectively. For a <!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math>
-simulation, <!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>7</mn></mrow></msup></mrow><mo class="MathClass-close">)</mo></mrow></math>
-baroclinic time steps are required. Clearly, these estimates are very rough. For example, to account for the
-shallower depth of the L2 and L3 grids, one may assume a depth decrease by a factor of 10, and accordingly
-increase <!--l. 202--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi></mrow></msub></math>
+<!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> (L0, L1) and
+<!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> (L2, L3),
+respectively. For a <!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math>
+simulation, <!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>6</mn></mrow></msup></mrow><mo class="MathClass-close">)</mo></mrow></math>
+(<!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi> <mo class="MathClass-rel">=</mo> <mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>7</mn></mrow></msup></mrow><mo class="MathClass-close">)</mo></mrow></math>) baroclinic
+time steps are required for L0, L1 (L2, L3). Clearly, these estimates are very rough. For example, to account for
+the shallower depth of the L2 and L3 grids, one may assume a depth decrease by a factor of 10, and accordingly
+increase <!--l. 217--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><msub><mrow><mi>t</mi></mrow><mrow><mi>b</mi><mi>t</mi></mrow></msub></math>
 by a factor of 3 for L2 and L3.
-</p><!--l. 204--><p class="noindent">So far, no results are available measuring execution time for grids of similar size as
-L0-L3. The closest matching available result is for <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span>, with a grid size of
-<!--l. 204--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>2</mn><mn>4</mn></math>x<!--l. 204--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>2</mn><mn>8</mn></math>x<!--l. 204--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mn>0</mn></math>
-data points, which is roughly 1/10 of the number of spatial data points in L0-L3. Note that it is always possible
-to assume identical physical dimensions of the grid spacing (including the temporal lattice) between
-<span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span> and L0-L3, since the benchmarking results are independent on physical dimensions (but depend
+</p><!--l. 219--><p class="noindent">So far, no results are available measuring execution time for grids of similar size as L0-L3. The closest match is <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span>,
+with a grid size of <!--l. 219--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>0</mn><mn>4</mn><mn>8</mn></math>
+x <!--l. 219--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>2</mn><mn>5</mn><mn>6</mn></math> x
+<!--l. 219--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mn>0</mn></math> data
+points, which is roughly 80% (15%) of the number of spatial data points in L0 (L2). Note that it is always
+possible to assume identical physical dimensions of the grid spacing (including the temporal lattice) between
+<span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span> and L0-L3, since the benchmarking results are independent on physical dimensions (but depend
 only on the amount of data points).
-<a id="x1-8002r10"></a>
+</p><!--l. 221--><p class="noindent">Our results showed that in <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span>, the processing time for one time step is about
+<!--l. 221--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo class="MathClass-punc">.</mo><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math>
+seconds using 32 cores of a single <span class="obeylines-h"><span class="verb"><span class="cmtt-12">c4_8xlarge</span></span></span> instance. It follows that a
+<!--l. 221--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math>
+spin up time for <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark3</span></span></span> (assumed to consist of
+<!--l. 221--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>6</mn></mrow></msup></math>-<!--l. 221--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><msup><mrow><mn>0</mn></mrow><mrow><mn>7</mn></mrow></msup></math>
+baroclinic time steps of lenghts displayed in Tab. <a href="#x1-8002r1">1<!--tex4ht:ref: tab:timesteps --></a>) takes a minimum of
+<!--l. 221--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>1</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>d</mi></mrow><mo class="MathClass-close">)</mo></mrow></math> to
+complete.
+<a id="x1-8003r10"></a>
 </p>
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.3   </span> <a id="x1-90003"></a>Monetary cost</h5>
-<!--l. 209--><p class="noindent">Hence, in the following we may assume <!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>t</mi></math>
-and <!--l. 209--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi>Δ</mi><mi>x</mi></math> is
-similar for <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span> and L0-L3, keeping in mind that the amount of processed data is an order of
-magnitude less than for each of the 4 experiments L0-L3. Fig. <a href="#x1-5001r1">1<!--tex4ht:ref: fig:met_c44xlarge --></a> shows that <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span> takes roughly
-<!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>0</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>s</mi></math> to
-complete on a 16-core <span class="obeylines-h"><span class="verb"><span class="cmtt-12">c4_4xlarge</span></span></span> instance using the GFortran compiler. The number of time steps
-integrated in <span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span> is 200, i.e. about 2 time steps per second are processed. It follows that a
-<!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mn>5</mn><mspace class="thinspace" width="0.3em"></mspace><mi>y</mi><mi>r</mi></math> spin up time for
-<span class="obeylines-h"><span class="verb"><span class="cmtt-12">benchmark2</span></span></span> takes roughly <!--l. 210--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mn>6</mn><mn>0</mn><mspace class="thinspace" width="0.3em"></mspace><mi>d</mi></mrow><mo class="MathClass-close">)</mo></mrow></math>
-to complete.
-</p><!--l. 212--><p class="noindent">The instance type <span class="obeylines-h"><span class="verb"><span class="cmtt-12">c4_4xlarge</span></span></span> is currently (2017/01/12) priced at $0.796 per hour for on-demand use, resulting in a total of
-<!--l. 212--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow></mrow></mrow></math>$<!--l. 212--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo class="MathClass-punc">,</mo> <mn>0</mn><mn>0</mn><mn>0</mn></math></p></body></div></html><mo class="MathClass-close">)</mo>
-for a 2 month lease.
+<!--l. 225--><p class="noindent">The instance type <span class="obeylines-h"><span class="verb"><span class="cmtt-12">c4_8xlarge</span></span></span> is currently (2017/01/12) priced at $1.591 (2.085) per Hour
+for on-demand use in US East (Asia Paciﬁc, Sydney) region, resulting in a total of roughly
+<!--l. 225--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mstyle class="text"><mtext>USD </mtext></mstyle><mn>5</mn><mn>0</mn><mn>0</mn></mrow><mo class="MathClass-close">)</mo></mrow></math> for a 10
+day lease.
 <a id="x1-9001r8"></a>
-<h4 class="subsectionHead"><span class="titlemark">2.2   </span> <a id="x1-100002"></a>TODO</h4>
-<ul class="itemize1">
-<li class="itemize">Relate monetary cost of computations to cost of labor?</li></ul>
-<a id="Q1-1-13"></a>
-<h3 class="likesectionHead"><a id="x1-110002"></a>References</h3>
+</p>
+<h4 class="subsectionHead"><span class="titlemark">2.2   </span> <a id="x1-100002"></a>Conclusion</h4>
+<!--l. 231--><p class="noindent">Given that high-resolution, state-of-the-art regional and coastal numerical studies such as <a href="#Xkumar2015midshelf">Kumar et al.</a> (<a href="#Xkumar2015midshelf">2015</a>)
+are conducted on multiple diﬀerent large grids (some of which require an extensive spin-up phase) we estimate
+                                                                                                
+                                                                                                
+that the total monetary cost of cloud-computing infrastructure will typically be on the order of
+<!--l. 231--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mstyle class="text"><mtext>USD </mtext></mstyle><mn>1</mn><mn>0</mn><mo class="MathClass-punc">,</mo> <mn>0</mn><mn>0</mn><mn>0</mn></mrow><mo class="MathClass-close">)</mo></mrow></math> to
+<!--l. 231--><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold-script">𝒪</mi><mrow><mo class="MathClass-open">(</mo><mrow><mstyle class="text"><mtext>USD </mtext></mstyle><mn>1</mn><mn>0</mn><mn>0</mn><mo class="MathClass-punc">,</mo> <mn>0</mn><mn>0</mn><mn>0</mn></mrow><mo class="MathClass-close">)</mo></mrow></math>. Note
+that this estimate refers to the ﬁnal experiment(s) whose results are published. Importantly, it <span class="cmssi-12">does not</span>
+include the testing phase, which may well increase the total cost of the study by a factor of 10 or
+more.
+<a id="x1-10001r13"></a>
+</p>
+<h4 class="subsectionHead"><span class="titlemark">2.3   </span> <a id="x1-110003"></a>TODO</h4>
+<!--l. 235--><p class="noindent">Compare it to cost of acquiring and operating computers.
+<a id="Q1-1-15"></a>
+</p>
+<h3 class="likesectionHead"><a id="x1-120003"></a>References</h3>
 <div class="thebibliography">
 <p class="bibitem"><span class="biblabel">
 <a id="Xweb:awscfncluster"></a><span class="bibsp">   </span></span>Amazon Web Services, 2016a. CfnCluster. <span class="underline"><a href="http://cfncluster.readthedocs.io/en/latest">External link</a></span> (Accessed on Jan 17, 2016).
@@ -280,8 +334,18 @@ for a 2 month lease.
   (soda). Monthly Weather Review 136, 2999–3017.
   </p>
 <p class="bibitem"><span class="biblabel">
+<a id="Xweb:cyclempi"></a><span class="bibsp">   </span></span>Howard, A., 2015.  Running MPI applications in Amazon EC2.  <span class="underline"><a href="https://cyclecomputing.com/running-mpi-applications-in-amazon-ec2/">External link</a></span> (Accessed on Jan 23,
+  2016).
+  </p>
+<p class="bibitem"><span class="biblabel">
+<a id="Xweb:ibmMpiTrick"></a><span class="bibsp">   </span></span>IBM Corporation, 2010.  TCP_MEM change for TCP connection errors running MPI jobs - IBM
+  Cluster 1350. <span class="underline"><a href="https://www-947.ibm.com/support/entry/portal/docdisplay?lndocid=MIGR-5086630">External link</a></span> (Accessed on Jan. 23, 2017).
+  </p>
+<p class="bibitem"><span class="biblabel">
 <a id="Xweb:intelXeon"></a><span class="bibsp">   </span></span>Intel, 2016. Intel Xeon Processor E5 2660 v3 25M Cache 2.60-GHz. <span class="underline"><a href="https://ark.intel.com/products/81706/Intel-Xeon-Processor-E5-2660-v3-25M-Cache-2_60-GHz">External link</a></span> (Accessed on Jan.
   11, 2017).
+                                                                                                
+                                                                                                
   </p>
 <p class="bibitem"><span class="biblabel">
 <a id="Xkumar2015midshelf"></a><span class="bibsp">   </span></span>Kumar, N., Feddersen, F., Uchiyama, Y., McWilliams, J., OReilly, W., 2015.  Midshelf to surfzone
@@ -296,8 +360,6 @@ for a 2 month lease.
 <p class="bibitem"><span class="biblabel">
 <a id="Xweb:mct"></a><span class="bibsp">   </span></span>UChicage Argonne, 2016.  Modeling Coupling Toolkit (MCT) Software.  <span class="underline"><a href="http://www.mcs.anl.gov/research/projects/mct/">External link</a></span> (Accessed on
   Jan. 11, 2017).
-                                                                                                
-                                                                                                
   </p>
 <p class="bibitem"><span class="biblabel">
 <a id="Xwarner2008using"></a><span class="bibsp">   </span></span>Warner, J.C., Perlin, N., Skyllingstad, E.D., 2008. Using the model coupling toolkit to couple earth
@@ -309,3 +371,4 @@ for a 2 month lease.
   on Jan. 11, 2017).
 </p>
 </div>
+</body></div></html>
