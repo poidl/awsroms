@@ -16,7 +16,7 @@ builddir = htl_tmp_builddir
 
 # Set an alternative document title and subtitle. Empty string defaults to (possibly
 # too long) latex title.
-title = Notes on running ROMS on Amazon Web Services (DRAFT)
+title = Notes on running ROMS on Amazon Web Services
 subtitle = 
 # Set an alternative document title in <head> (title for browser tabs). Empty string defaults to (possibly
 # too long) latex title.
